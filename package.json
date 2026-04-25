@@ -5,12 +5,12 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "echo building && vite build",
+    "build": "vite build",
     "preview": "vite preview",
-    "id": "nodefix",
-    "engines": {
-      "node": "18.x"
-    }
+    "id": "nodefix"
+  },
+  "engines": {
+    "node": ">=18.18.0"
   },
   "dependencies": {
     "@react-three/fiber": "^8.18.0",
