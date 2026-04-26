@@ -3,25 +3,7 @@ import { createRoot } from "react-dom/client";
 import AboutSection from "@/components/ui/about-section";
 import "./tailwind.css";
 
-const timeLabel = document.getElementById("live-time");
 
-const formatTime = (): string => {
-  const now = new Date();
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
-    timeZone: "Asia/Kolkata",
-  });
-  return `${formatter.format(now)} GMT+5:30`;
-};
-
-if (timeLabel) {
-  timeLabel.textContent = formatTime();
-  window.setInterval(() => {
-    timeLabel.textContent = formatTime();
-  }, 1000 * 30);
-}
 
 const cursor = document.getElementById("name-cursor") as HTMLElement | null;
 const nameGlow = document.getElementById("name-glow") as HTMLElement | null;
