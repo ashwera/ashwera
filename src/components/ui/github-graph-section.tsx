@@ -65,12 +65,9 @@ export default function GithubGraphSection() {
     >
       <div className="sticky top-0 flex min-h-screen items-center overflow-visible py-12">
         <div className="mx-auto w-full max-w-7xl">
-          <div className="mb-7 flex flex-wrap items-end justify-between gap-5">
+          <div className="mb-1 flex flex-wrap items-end justify-between gap-5">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-black/50">
-                Coding Pulse
-              </p>
-              <h2 className="mt-3 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl">
+              <h2 className="mt-1 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl">
                 Heatmaps
               </h2>
             </div>
@@ -86,7 +83,7 @@ export default function GithubGraphSection() {
             </div>
           </div>
 
-          <div className="relative h-[390px] sm:h-[420px]">
+          <div className="relative h-[280px] sm:h-[300px]">
             <motion.div
               className="absolute inset-0 z-10"
               style={{ scale: leetcodeScale }}
@@ -142,33 +139,24 @@ function HeatmapCard({ panel }: { panel: HeatmapPanel }) {
         rel="noreferrer"
         className="relative z-10 block h-full overflow-hidden rounded-[28px] border border-white/[0.06] bg-[#0f1116] p-3 shadow-[0_34px_96px_rgba(0,0,0,0.14),0_72px_190px_rgba(0,0,0,0.08),0_128px_280px_rgba(0,0,0,0.045)] transition duration-300 hover:-translate-y-1 sm:p-5"
       >
-      <div className="relative z-10 mb-3 flex items-center justify-between gap-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.05em] text-[#f5f5f5]">
-          {username}
-        </p>
-        <div className="flex items-center gap-2">
-          <span
-            className="h-2.5 w-2.5 rounded-full"
-            style={{ backgroundColor: panel.accent }}
-          />
+        <div className="relative z-10 mb-3 flex items-center justify-between gap-4">
           <p className="text-xs font-semibold uppercase tracking-[0.05em] text-[#f5f5f5]">
-            {panel.platform}
+            {username}
           </p>
+          <div className="flex items-center gap-2">
+            <span
+              className="h-2.5 w-2.5 rounded-full"
+              style={{ backgroundColor: panel.accent }}
+            />
+            <p className="text-xs font-semibold uppercase tracking-[0.05em] text-[#f5f5f5]">
+              {panel.platform}
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="relative z-10 grid h-[252px] place-items-center overflow-visible rounded-2xl border border-white/[0.07] bg-[#0b0d12] px-4 pb-7 pt-5 shadow-[inset_0_-40px_80px_rgba(255,255,255,0.025)] sm:h-[264px]">
-make the frontend and con        <HeatmapGrid entries={entries} />
-      </div>
-
-      <div className="relative z-10 mt-4 flex items-center justify-between gap-4 bg-gradient-to-t from-white/[0.035] to-transparent px-1 pt-4">
-        <h3 className="font-['Bebas_Neue'] text-4xl font-normal uppercase leading-none text-[#f1dfd8] sm:text-5xl">
-          {panel.title}
-        </h3>
-        <span className="text-xs font-semibold uppercase tracking-[0.05em] text-[#f5f5f5] transition group-hover:text-white">
-          Open
-        </span>
-      </div>
+        <div className="relative z-10 grid h-[220px] place-items-center overflow-visible rounded-2xl border border-white/[0.07] bg-[#0b0d12] px-4 pb-7 pt-5 shadow-[inset_0_-40px_80px_rgba(255,255,255,0.025)] sm:h-[232px]">
+          <HeatmapGrid entries={entries} />
+        </div>
       </a>
     </div>
   );
@@ -191,7 +179,7 @@ function HeatmapGrid({ entries }: { entries: HeatmapEntry[] }) {
           </span>
         ))}
       </div>
-      <div className="grid h-[148px] grid-cols-[repeat(24,minmax(0,1fr))] grid-rows-[repeat(7,minmax(0,1fr))] gap-1 overflow-hidden sm:h-[156px]">
+      <div className="grid h-[120px] grid-cols-[repeat(24,minmax(0,1fr))] grid-rows-[repeat(7,minmax(0,1fr))] gap-1 overflow-hidden sm:h-[128px]">
         {entries.map((entry) => (
           <span
             key={entry.date}

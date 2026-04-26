@@ -111,7 +111,7 @@ export default function AchievementsSection() {
             ease: "power2.inOut",
             duration: 1.1,
           },
-          1,
+          1.8,
         );
 
         cards.forEach((card, index) => {
@@ -156,11 +156,7 @@ export default function AchievementsSection() {
             settleAt + 0.18,
           );
 
-          timeline.set(
-            card,
-            { zIndex: 30 + index },
-            stackAt,
-          );
+          timeline.set(card, { zIndex: 30 + index }, stackAt);
 
           if (index > 0) {
             timeline.to(
@@ -228,7 +224,7 @@ export default function AchievementsSection() {
             ease: "power2.inOut",
             duration: 1.1,
           },
-          1,
+          1.8,
         );
 
         cards.forEach((card, index) => {
@@ -271,11 +267,7 @@ export default function AchievementsSection() {
             settleAt + 0.18,
           );
 
-          timeline.set(
-            card,
-            { zIndex: 30 + index },
-            settleAt + 0.48,
-          );
+          timeline.set(card, { zIndex: 30 + index }, settleAt + 0.48);
         });
 
         return () => {
@@ -299,14 +291,15 @@ export default function AchievementsSection() {
         ref={textRef}
         className="relative z-10 mx-auto max-w-6xl pt-8 md:pt-16"
       >
-        <p className="text-xs font-bold uppercase tracking-[0.28em] text-black/52">
+        <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/58">
           Recognition
         </p>
-        <h2 className="mt-4 max-w-5xl font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-8xl lg:text-[8.5rem]">
-          Achievements & Recognition
+
+        <h2 className="mt-1 max-w-5xl font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-8xl lg:text-8.5xl">
+          Achievements & <br></br>Recognition
         </h2>
-        <p className="mt-10 max-w-2xl text-lg font-bold leading-tight text-black sm:text-2xl">
-          {introCopy}
+        <p className="mt-0 mb-2 max-w-2xl text-left text-base leading-relaxed tracking-[0.01em] text-black/75 sm:text-lg">
+          Still learning, always shipping.
         </p>
       </div>
 

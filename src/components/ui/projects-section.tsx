@@ -71,15 +71,16 @@ export function ProjectsSection() {
           <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/58">
             Selected Projects
           </p>
-          <h2 className="mt-2 font-['Bebas_Neue'] text-7xl font-normal uppercase leading-none text-white lg:text-8xl">
-            Works
-          </h2>
         </div>
 
         <Canvas
           camera={{ position: [0, 0, 0.1], fov: 60, near: 0.1, far: 80 }}
           dpr={[1, 1.65]}
-          gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
+          gl={{
+            antialias: true,
+            alpha: false,
+            powerPreference: "high-performance",
+          }}
           className="h-full w-full"
         >
           <color attach="background" args={["#080908"]} />
@@ -145,9 +146,18 @@ function HexWorksScene({
     }
 
     const ctx = gsap.context(() => {
-      gsap.set(tileRefs.current.map((tile) => tile.position), { z: "-=1.1" });
-      gsap.set(tileRefs.current.map((tile) => tile.rotation), { z: 0.22 });
-      gsap.set(tileRefs.current.map((tile) => tile.scale), { x: 0.82, y: 0.82 });
+      gsap.set(
+        tileRefs.current.map((tile) => tile.position),
+        { z: "-=1.1" },
+      );
+      gsap.set(
+        tileRefs.current.map((tile) => tile.rotation),
+        { z: 0.22 },
+      );
+      gsap.set(
+        tileRefs.current.map((tile) => tile.scale),
+        { x: 0.82, y: 0.82 },
+      );
 
       gsap
         .timeline({
@@ -159,9 +169,21 @@ function HexWorksScene({
           },
           defaults: { ease: "power3.out" },
         })
-        .to(tileRefs.current.map((tile) => tile.position), { z: "+=1.1", stagger: 0.05 }, 0)
-        .to(tileRefs.current.map((tile) => tile.rotation), { z: 0, stagger: 0.05 }, 0)
-        .to(tileRefs.current.map((tile) => tile.scale), { x: 1, y: 1, stagger: 0.05 }, 0);
+        .to(
+          tileRefs.current.map((tile) => tile.position),
+          { z: "+=1.1", stagger: 0.05 },
+          0,
+        )
+        .to(
+          tileRefs.current.map((tile) => tile.rotation),
+          { z: 0, stagger: 0.05 },
+          0,
+        )
+        .to(
+          tileRefs.current.map((tile) => tile.scale),
+          { x: 1, y: 1, stagger: 0.05 },
+          0,
+        );
 
       gsap.to(group.rotation, {
         y: -Math.PI * 2,
@@ -183,24 +205,35 @@ function HexWorksScene({
             scrub: 0.75,
           },
         })
-        .to(tileRefs.current.map((tile) => tile.position), {
-          z: "-=1.8",
-          y: (index) => (index % 2 === 0 ? "+=0.8" : "-=0.8"),
-          stagger: 0.025,
-          ease: "power3.in",
-        })
-        .to(tileRefs.current.map((tile) => tile.rotation), {
-          x: (index) => (index % 2 === 0 ? 0.36 : -0.36),
-          z: (index) => (index % 3 - 1) * 0.5,
-          stagger: 0.025,
-          ease: "power3.in",
-        }, 0)
-        .to(tileRefs.current.map((tile) => tile.scale), {
-          x: 0.78,
-          y: 0.78,
-          stagger: 0.025,
-          ease: "power3.in",
-        }, 0);
+        .to(
+          tileRefs.current.map((tile) => tile.position),
+          {
+            z: "-=1.8",
+            y: (index) => (index % 2 === 0 ? "+=0.8" : "-=0.8"),
+            stagger: 0.025,
+            ease: "power3.in",
+          },
+        )
+        .to(
+          tileRefs.current.map((tile) => tile.rotation),
+          {
+            x: (index) => (index % 2 === 0 ? 0.36 : -0.36),
+            z: (index) => ((index % 3) - 1) * 0.5,
+            stagger: 0.025,
+            ease: "power3.in",
+          },
+          0,
+        )
+        .to(
+          tileRefs.current.map((tile) => tile.scale),
+          {
+            x: 0.78,
+            y: 0.78,
+            stagger: 0.025,
+            ease: "power3.in",
+          },
+          0,
+        );
     }, section);
 
     return () => ctx.revert();
@@ -275,12 +308,18 @@ const ProjectTile = React.forwardRef<
     dimmed: boolean;
     onSelect: (tile: TileData) => void;
   }
->(function ProjectTile({ tile, radius, width, height, y, dimmed, onSelect }, ref) {
+>(function ProjectTile(
+  { tile, radius, width, height, y, dimmed, onSelect },
+  ref,
+) {
   const groupRef = React.useRef<THREE.Group>(null);
   const materialRef = React.useRef<THREE.MeshStandardMaterial>(null);
   const [hovered, setHovered] = React.useState(false);
   const texture = useProjectTexture(tile.videoAsset, tile.name, tile.accent);
-  const geometry = React.useMemo(() => roundedRectGeometry(width, height, 0.16), [height, width]);
+  const geometry = React.useMemo(
+    () => roundedRectGeometry(width, height, 0.16),
+    [height, width],
+  );
   const position: [number, number, number] = [
     Math.sin(tile.angle) * radius,
     y,
@@ -298,7 +337,8 @@ const ProjectTile = React.forwardRef<
 
     const opacity = dimmed ? 0.28 : 1;
     material.opacity += (opacity - material.opacity) * 0.1;
-    material.emissiveIntensity += ((hovered ? 0.2 : 0.04) - material.emissiveIntensity) * 0.12;
+    material.emissiveIntensity +=
+      ((hovered ? 0.2 : 0.04) - material.emissiveIntensity) * 0.12;
 
     const hoverScale = hovered ? 1.05 : 1;
     group.scale.x += (hoverScale - group.scale.x) * 0.14;
@@ -382,9 +422,13 @@ function useProjectTexture(src: string, title: string, accent: string) {
 
     observer.observe(document.body);
     video.addEventListener("canplay", useVideo, { once: true });
-    video.addEventListener("error", () => {
-      nextTexture.dispose();
-    }, { once: true });
+    video.addEventListener(
+      "error",
+      () => {
+        nextTexture.dispose();
+      },
+      { once: true },
+    );
     video.load();
 
     return () => {
@@ -408,7 +452,12 @@ function createProjectTexture(title: string, accent: string) {
   const context = canvas.getContext("2d");
 
   if (context) {
-    const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+    const gradient = context.createLinearGradient(
+      0,
+      0,
+      canvas.width,
+      canvas.height,
+    );
     gradient.addColorStop(0, "#111111");
     gradient.addColorStop(0.48, accent);
     gradient.addColorStop(1, "#050505");
@@ -427,11 +476,21 @@ function createProjectTexture(title: string, accent: string) {
 
     context.globalAlpha = 1;
     context.fillStyle = "rgba(0, 0, 0, 0.48)";
-    context.fillRect(0, canvas.height * 0.62, canvas.width, canvas.height * 0.38);
+    context.fillRect(
+      0,
+      canvas.height * 0.62,
+      canvas.width,
+      canvas.height * 0.38,
+    );
     context.fillStyle = "#ffffff";
     context.font = "700 86px Space Grotesk, Arial, sans-serif";
     context.textBaseline = "bottom";
-    context.fillText(title.toUpperCase(), 64, canvas.height - 72, canvas.width - 128);
+    context.fillText(
+      title.toUpperCase(),
+      64,
+      canvas.height - 72,
+      canvas.width - 128,
+    );
     context.fillStyle = "rgba(255, 255, 255, 0.7)";
     context.font = "600 24px Space Grotesk, Arial, sans-serif";
     context.fillText("INTERACTIVE PROJECT", 68, canvas.height - 34);
@@ -508,7 +567,9 @@ function MobileProjectCard({ project }: { project: Project }) {
         <h3 className="font-['Bebas_Neue'] text-4xl uppercase leading-none">
           {project.name}
         </h3>
-        <p className="mt-2 text-sm leading-6 text-white/72">{project.summary}</p>
+        <p className="mt-2 text-sm leading-6 text-white/72">
+          {project.summary}
+        </p>
       </div>
     </article>
   );
