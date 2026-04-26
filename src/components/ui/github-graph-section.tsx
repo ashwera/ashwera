@@ -68,7 +68,7 @@ export default function GithubGraphSection() {
           <div className="mb-1 flex flex-wrap items-end justify-between gap-5">
             <div>
               <h2 className="mt-1 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl">
-                Heatmaps
+                The Grind
               </h2>
             </div>
 
