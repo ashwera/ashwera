@@ -18,7 +18,7 @@ const AboutSection: React.FC = () => {
 
       {/* --- INTRO PRELOADER OVERLAY --- */}
       <motion.div
-        className="fixed inset-0 z-50 bg-[#808080]"
+        className="fixed inset-0 z-50 bg-[#060606]"
         initial={{ y: 0 }}
         animate={{ y: introFinished ? "-100vh" : 0 }}
         transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
