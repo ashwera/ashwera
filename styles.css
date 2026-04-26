@@ -428,3 +428,7 @@ a {
     padding-top: 4.3rem;
   }
 }
+
+html {
+  scroll-behavior: smooth;
+}
