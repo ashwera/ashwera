@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 type Project = {
   title: string;
@@ -49,21 +49,62 @@ export function ProjectsSection() {
 }
 
 export function WorksSection({ projects }: { projects: Project[] }) {
+  const sectionRef = React.useRef<HTMLElement>(null);
+  const viewportRef = React.useRef<HTMLDivElement>(null);
   const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const [maxTranslate, setMaxTranslate] = React.useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxTranslate]);
+
+  React.useLayoutEffect(() => {
+    const updateTrackDistance = () => {
+      const viewport = viewportRef.current;
+      const scroller = scrollerRef.current;
+      if (!viewport || !scroller) return;
+
+      setMaxTranslate(
+        Math.max(0, scroller.scrollWidth - viewport.clientWidth),
+      );
+    };
+
+    updateTrackDistance();
+
+    const resizeObserver = new ResizeObserver(updateTrackDistance);
+    if (viewportRef.current) resizeObserver.observe(viewportRef.current);
+    if (scrollerRef.current) resizeObserver.observe(scrollerRef.current);
+
+    window.addEventListener("resize", updateTrackDistance);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateTrackDistance);
+    };
+  }, [projects.length]);
 
   const scrollByCard = (direction: -1 | 1) => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
     const card = scroller.querySelector<HTMLElement>("[data-project-card]");
     const cardWidth = card?.getBoundingClientRect().width ?? 320;
-    scroller.scrollBy({ left: direction * (cardWidth + 20), behavior: "smooth" });
+    window.scrollBy({
+      top: direction * Math.min(maxTranslate, cardWidth + 20),
+      behavior: "smooth",
+    });
   };
 
   return (
     <section
-      className="relative w-full overflow-hidden px-4 py-14 text-black sm:px-6 sm:py-16 lg:px-8"
+      ref={sectionRef}
+      className="relative w-full px-4 text-black sm:px-6 lg:px-8"
+      style={{ height: `calc(100vh + ${maxTranslate}px)` }}
       aria-label="Project showcase"
     >
+      <div className="sticky top-0 flex min-h-screen w-full items-center overflow-hidden py-14 sm:py-16">
       <div className="mx-auto w-full max-w-[1600px]">
         <motion.div
           initial={{ opacity: 0, y: 22 }}
@@ -99,15 +140,19 @@ export function WorksSection({ projects }: { projects: Project[] }) {
             ›
           </button>
 
-          <div
+          <div ref={viewportRef} className="w-full overflow-hidden">
+          <motion.div
             ref={scrollerRef}
-            className="flex w-full gap-5 overflow-x-auto px-14 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            style={{ x }}
+            className="flex w-max gap-5 px-14 pb-4 will-change-transform"
           >
             {projects.map((project, index) => (
               <ProjectCard key={project.title} project={project} index={index} />
             ))}
+          </motion.div>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
