@@ -2,56 +2,76 @@
 > portfolio@1.0.0 dev
 > vite --host 127.0.0.1
 
+Port 5173 is in use, trying another one...
 
-  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m389[22m[2m[0m ms[22m
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m568[22m[2m[0m ms[22m
 
-  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5173[22m/[39m
-[2m12:30:56 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mindex.html[22m
-[2m12:30:56 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mindex.html[22m
-[2m12:55:39 am[22m [36m[1m[vite][22m[39m [32m✨ new dependencies optimized: [33m@react-three/fiber, three[32m[39m
-[2m12:55:39 am[22m [36m[1m[vite][22m[39m [32m✨ optimized dependencies changed. reloading[39m
-[2m12:55:53 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
-[2m1:00:47 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:04:38 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:09:24 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:09:25 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:09:41 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:11:12 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/achievements-section.tsx, /src/tailwind.css[22m
-[2m1:16:39 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/achievements-section.tsx, /src/tailwind.css[22m
-[2m1:17:41 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/achievements-section.tsx, /src/tailwind.css[22m
-[2m1:19:48 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:20:30 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:21:51 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.ts[22m
-[2m1:23:53 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/demo.tsx, /src/tailwind.css[22m
-[2m1:28:40 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/demo.tsx, /src/tailwind.css[22m
-[2m1:41:15 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.ts[22m
-[2m2:46:09 am[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
-[2m2:46:09 am[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
-[2m2:46:09 am[22m [36m[1m[vite][22m[39m server restarted.
-ainer-scroll-animation.tsx, /src/tailwind.css[22m
-[2m12:30:56 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mindex.html[22m
-[2m12:30:56 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.ts[22m
-[2m12:30:56 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m12:31:29 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.ts[22m
-[2m12:53:23 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
-[2m12:53:59 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
-[2m12:55:53 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
-[2m1:00:47 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:04:38 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:09:24 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:09:24 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:09:25 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:09:41 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:09:41 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:11:12 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/achievements-section.tsx, /src/tailwind.css[22m
-[2m1:16:39 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/achievements-section.tsx, /src/tailwind.css[22m
-[2m1:17:41 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/achievements-section.tsx, /src/tailwind.css[22m
-[2m1:19:48 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:20:30 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/github-graph-section.tsx, /src/tailwind.css[22m
-[2m1:21:51 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.ts[22m
-[2m1:23:53 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/demo.tsx, /src/tailwind.css[22m
-[2m1:28:39 am[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/demo.tsx, /src/tailwind.css[22m
-[2m1:41:15 am[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.ts[22m
-[2m2:46:09 am[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
-[2m2:46:09 am[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
-[2m2:46:09 am[22m [36m[1m[vite][22m[39m server restarted.
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5174[22m/[39m
+[2m1:37:24 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mabout/index.html[22m
+[2m1:37:32 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m1:37:33 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mabout.html[22m
+[2m1:37:33 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mabout/index.html[22m
+[2m1:37:33 pm[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[2m1:37:33 pm[22m [36m[1m[vite][22m[39m server restarted.
+[2m1:38:06 pm[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+Re-optimizing dependencies because vite config has changed
+[2m1:38:06 pm[22m [36m[1m[vite][22m[39m server restarted.
+[2m1:44:04 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/about-section.tsx, /src/tailwind.css[22m
+[2m1:46:38 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:47:03 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:50:17 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:50:29 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:52:26 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/about-section.tsx, /src/tailwind.css[22m
+[2m1:52:59 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/about-section.tsx, /src/tailwind.css[22m
+[2m1:53:12 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/about-section.tsx, /src/tailwind.css[22m
+[2m1:53:59 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:56:23 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:56:39 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:56:47 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:56:49 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:57:39 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:58:40 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:58:42 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:59:16 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:59:30 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:01:05 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:06:36 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:06:36 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:09:05 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:11:02 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:52:24 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:52:24 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+32mpage reload [39m[2mindex.html[22m
+[2m1:37:33 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mabout.html[22m
+[2m1:37:33 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mabout/index.html[22m
+[2m1:37:33 pm[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[2m1:37:33 pm[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mpublic/about/resume/index.html[22m
+[2m1:37:33 pm[22m [36m[1m[vite][22m[39m server restarted.
+[2m1:38:06 pm[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+Re-optimizing dependencies because vite config has changed
+[2m1:38:06 pm[22m [36m[1m[vite][22m[39m server restarted.
+[2m1:44:04 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/about-section.tsx, /src/tailwind.css[22m
+[2m1:46:38 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:47:03 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:50:17 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:50:29 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:52:26 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/about-section.tsx, /src/tailwind.css[22m
+[2m1:52:59 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/about-section.tsx, /src/tailwind.css[22m
+[2m1:53:12 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/about-section.tsx, /src/tailwind.css[22m
+[2m1:53:59 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:56:23 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:56:39 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:56:47 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:56:49 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:57:39 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:58:40 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:58:42 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:59:16 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m1:59:30 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:01:05 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:06:36 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:06:36 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:09:05 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:11:02 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:52:24 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m
+[2m2:52:24 pm[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/ui/projects-section.tsx, /src/tailwind.css[22m

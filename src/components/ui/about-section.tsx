@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { LinkPreview } from "@/components/ui/link-preview";
 
 const AboutSection: React.FC = () => {
@@ -15,7 +15,6 @@ const AboutSection: React.FC = () => {
 
   return (
     <div className="relative min-h-screen w-full flex flex-col uppercase selection:bg-black selection:text-white text-[#060606]">
-
       {/* --- INTRO PRELOADER OVERLAY --- */}
       <motion.div
         className="fixed inset-0 z-50 bg-[#060606]"
@@ -45,9 +44,10 @@ const AboutSection: React.FC = () => {
         }}
         transition={{ duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
       >
-        <span className="text-[#F5F1E9] text-xs font-bold tracking-widest text-center">LOGO</span>
+        <span className="text-[#F5F1E9] text-xs font-bold tracking-widest text-center">
+          LOGO
+        </span>
       </motion.div>
-
 
       {/* --- HERO SECTION WITH BG IMAGE (NO WHITESPACE, NO ANIMATION) --- */}
       <div className="relative w-full h-screen flex items-center justify-center overflow-hidden shrink-0">
@@ -66,7 +66,8 @@ const AboutSection: React.FC = () => {
               className="text-[clamp(3.5rem,7vw,7.5rem)] tracking-normal leading-[1.1] text-[#F5F1E9] normal-case"
               style={{ fontFamily: '"Bebas Neue", Impact, sans-serif' }}
             >
-              AssalamuAlaikum!<br />
+              AssalamuAlaikum!
+              <br />
               <span className="inline-block mt-2">I’m Ashwera</span>
             </h2>
           </div>
@@ -74,7 +75,8 @@ const AboutSection: React.FC = () => {
           {/* Right Side: CS Undergrad Text (Was Left) */}
           <div className="w-full md:w-[45%] flex flex-col text-left md:text-right justify-center order-2 mt-8 md:mt-0">
             <p className="text-[clamp(1.2rem,2vw,1.8rem)] font-bold tracking-tight leading-[1.3] text-[#F5F1E9] normal-case">
-              A CS undergrad hungry to learn, thriving on code and 142 failed test cases.
+              A CS undergrad hungry to learn, thriving on code and 142 failed
+              test cases.
             </p>
             <div className="h-[2px] w-12 bg-white/40 my-5 rounded-full self-start md:self-end"></div>
             <p className="text-[clamp(1rem,1.4vw,1.25rem)] font-medium tracking-tight leading-[1.5] text-gray-300 normal-case mb-8">
@@ -83,34 +85,35 @@ const AboutSection: React.FC = () => {
 
             <div className="flex flex-row items-center justify-start md:justify-end gap-4">
               <a
-                href="mailto:hello@example.com"
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=syedashwerahasan@gmail.com"
+                target="_blank"
+                rel="noreferrer"
                 className="px-8 py-3 bg-transparent border border-solid border-white/80 text-white font-bold text-sm tracking-widest uppercase rounded-full hover:bg-white hover:text-black transition-all"
               >
-                Say Salam
+                Say Hello
               </a>
               <a
-                href="#/resume"
+                href="/resume"
+                target="_blank"
+                rel="noreferrer"
                 className="px-8 py-3 bg-transparent border border-solid border-white/80 text-white font-bold text-sm tracking-widest uppercase rounded-full hover:bg-white hover:text-black transition-all"
               >
                 My Resume
               </a>
             </div>
           </div>
-
         </div>
       </div>
 
-
       {/* --- BODY TEXT (BELOW HERO) --- */}
       <div className="w-full flex flex-col items-center pt-10 pb-24 md:pt-16 md:pb-40">
-
         {/* Body Text Section */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
           variants={{
-            visible: { transition: { staggerChildren: 0.04 } }
+            visible: { transition: { staggerChildren: 0.04 } },
           }}
           className="flex flex-col items-center w-full max-w-4xl px-6 md:px-8 text-center mb-8"
         >
@@ -121,7 +124,11 @@ const AboutSection: React.FC = () => {
               <motion.span
                 variants={{
                   hidden: { y: "100%", opacity: 0 },
-                  visible: { y: "0%", opacity: 1, transition: { duration: 0.6, ease: [0.33, 1, 0.68, 1] } }
+                  visible: {
+                    y: "0%",
+                    opacity: 1,
+                    transition: { duration: 0.6, ease: [0.33, 1, 0.68, 1] },
+                  },
                 }}
                 className="inline-block"
               >
@@ -136,26 +143,33 @@ const AboutSection: React.FC = () => {
               </motion.span>
             </span>
 
-            {"FOCUSED ON BUILDING SYSTEMS THAT HOLD UP UNDER PRESSURE. FROM BACKEND-HEAVY APPLICATIONS TO DATA-DRIVEN WORKFLOWS, I CARE ABOUT PERFORMANCE, EDGE CASES, AND REAL-WORLD USABILITY. I ENJOY ADDING THE COMPETITIVE PROGRAMMING EDGE TO MY PROJECTS, LEVELLING UP OPTIMIZATION LIKE TARGETED GAMEPLAY.".split(" ").map((word, i) => (
-              <span key={i} className="overflow-hidden inline-block mr-[0.25em] mb-[0.2em]">
-                <motion.span
-                  variants={{
-                    hidden: { y: "100%", opacity: 0 },
-                    visible: { y: "0%", opacity: 1, transition: { duration: 0.6, ease: [0.33, 1, 0.68, 1] } }
-                  }}
-                  className="inline-block"
+            {"FOCUSED ON BUILDING SYSTEMS THAT HOLD UP UNDER PRESSURE. FROM BACKEND-HEAVY APPLICATIONS TO DATA-DRIVEN WORKFLOWS, I CARE ABOUT PERFORMANCE, EDGE CASES, AND REAL-WORLD USABILITY. I ENJOY ADDING THE COMPETITIVE PROGRAMMING EDGE TO MY PROJECTS, LEVELLING UP OPTIMIZATION LIKE TARGETED GAMEPLAY."
+              .split(" ")
+              .map((word, i) => (
+                <span
+                  key={i}
+                  className="overflow-hidden inline-block mr-[0.25em] mb-[0.2em]"
                 >
-                  {word}
-                </motion.span>
-              </span>
-            ))}
+                  <motion.span
+                    variants={{
+                      hidden: { y: "100%", opacity: 0 },
+                      visible: {
+                        y: "0%",
+                        opacity: 1,
+                        transition: { duration: 0.6, ease: [0.33, 1, 0.68, 1] },
+                      },
+                    }}
+                    className="inline-block"
+                  >
+                    {word}
+                  </motion.span>
+                </span>
+              ))}
           </p>
 
           <div className="w-12 md:w-20 h-[2px] bg-[#0d0d0d]/30 mt-8 rounded-full"></div>
         </motion.div>
-
       </div>
-
     </div>
   );
 };

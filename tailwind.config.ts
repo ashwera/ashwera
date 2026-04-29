@@ -17,6 +17,19 @@ const config: Config = {
           foreground: "hsl(var(--muted-foreground))",
         },
       },
+      keyframes: {
+        shimmer: {
+          "0%": { backgroundPosition: "220% 0" },
+          "100%": { backgroundPosition: "-220% 0" },
+        },
+        "skeleton-reveal": {
+          "0%": { opacity: "0", transform: "translateY(12px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        shimmer: "shimmer 1.35s linear infinite",
+      },
     },
   },
   plugins: [],

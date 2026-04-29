@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import MyWorksScrollDemo from "@/components/ui/demo";
 import GithubGraphSection from "@/components/ui/github-graph-section";
 import AchievementsSection from "@/components/ui/achievements-section";
+import ExperienceSection from "@/components/ui/experience-section";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./tailwind.css";
@@ -203,6 +204,13 @@ const githubGraphRoot = document.getElementById("github-graph-root");
 if (githubGraphRoot) {
   createRoot(githubGraphRoot).render(
     createElement(StrictMode, null, createElement(GithubGraphSection)),
+  );
+}
+
+const experienceRoot = document.getElementById("experience-root");
+if (experienceRoot) {
+  createRoot(experienceRoot).render(
+    createElement(StrictMode, null, createElement(ExperienceSection)),
   );
 }
 
