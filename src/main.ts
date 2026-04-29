@@ -1,4 +1,5 @@
 import { StrictMode, createElement } from "react";
+import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import MyWorksScrollDemo from "@/components/ui/demo";
 import GithubGraphSection from "@/components/ui/github-graph-section";
@@ -7,10 +8,6 @@ import ExperienceSection from "@/components/ui/experience-section";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./tailwind.css";
-
-gsap.registerPlugin(ScrollTrigger);
-
-const timeLabel = document.getElementById("live-time");
 
 const formatTime = (): string => {
   const now = new Date();
@@ -23,18 +20,79 @@ const formatTime = (): string => {
   return `${formatter.format(now)} GMT+5:30`;
 };
 
-if (timeLabel) {
-  timeLabel.textContent = formatTime();
-  window.setInterval(() => {
-    timeLabel.textContent = formatTime();
-  }, 1000 * 30);
-}
+const waitForDomReady = (): Promise<void> => {
+  if (document.readyState !== "loading") {
+    return Promise.resolve();
+  }
 
-const heroName = document.getElementById("hero-name") as HTMLElement | null;
-const cursor = document.getElementById("name-cursor") as HTMLElement | null;
-const nameGlow = document.getElementById("name-glow") as HTMLElement | null;
-const heroLower = document.querySelector(".hero-lower") as HTMLElement | null;
-const heroSummary = document.querySelector(".hero-summary") as HTMLElement | null;
+  return new Promise((resolve) => {
+    document.addEventListener("DOMContentLoaded", () => resolve(), {
+      once: true,
+    });
+  });
+};
+
+const waitForFontsReady = async (): Promise<void> => {
+  if ("fonts" in document) {
+    await document.fonts.ready;
+  }
+};
+
+const waitForLayoutFrame = (): Promise<void> =>
+  new Promise((resolve) => {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => resolve());
+    });
+  });
+
+const mountReactRoots = (): void => {
+  const worksRoot = document.getElementById("works-root");
+  if (worksRoot) {
+    flushSync(() => {
+      createRoot(worksRoot).render(
+        createElement(StrictMode, null, createElement(MyWorksScrollDemo)),
+      );
+    });
+  }
+
+  const githubGraphRoot = document.getElementById("github-graph-root");
+  if (githubGraphRoot) {
+    flushSync(() => {
+      createRoot(githubGraphRoot).render(
+        createElement(StrictMode, null, createElement(GithubGraphSection)),
+      );
+    });
+  }
+
+  const experienceRoot = document.getElementById("experience-root");
+  if (experienceRoot) {
+    flushSync(() => {
+      createRoot(experienceRoot).render(
+        createElement(StrictMode, null, createElement(ExperienceSection)),
+      );
+    });
+  }
+
+  const achievementsRoot = document.getElementById("achievements-root");
+  if (achievementsRoot) {
+    flushSync(() => {
+      createRoot(achievementsRoot).render(
+        createElement(StrictMode, null, createElement(AchievementsSection)),
+      );
+    });
+  }
+};
+
+const initializeLiveTime = (): void => {
+  const timeLabel = document.getElementById("live-time");
+
+  if (timeLabel) {
+    timeLabel.textContent = formatTime();
+    window.setInterval(() => {
+      timeLabel.textContent = formatTime();
+    }, 1000 * 30);
+  }
+};
 
 const buildFlipCharacters = (nameElement: HTMLElement): void => {
   const rows = nameElement.querySelectorAll<HTMLElement>(".name-row");
@@ -86,137 +144,143 @@ const enableCharacterFlip = (nameElement: HTMLElement): void => {
   });
 };
 
-if (heroName) {
-  buildFlipCharacters(heroName);
-  enableCharacterFlip(heroName);
-}
+const initializeHeroInteractions = (): void => {
+  const heroName = document.getElementById("hero-name") as HTMLElement | null;
+  const cursor = document.getElementById("name-cursor") as HTMLElement | null;
+  const nameGlow = document.getElementById("name-glow") as HTMLElement | null;
 
-if (cursor) {
-  let targetX = window.innerWidth / 2;
-  let targetY = window.innerHeight / 2;
-  let currentX = targetX;
-  let currentY = targetY;
-  let glowX = targetX;
-  let glowY = targetY;
-
-  const updateCursor = (): void => {
-    currentX += (targetX - currentX) * 0.24;
-    currentY += (targetY - currentY) * 0.24;
-    glowX += (targetX - glowX) * 0.12;
-    glowY += (targetY - glowY) * 0.12;
-
-    cursor.style.left = `${currentX}px`;
-    cursor.style.top = `${currentY}px`;
-
-    if (nameGlow) {
-      nameGlow.style.left = `${glowX}px`;
-      nameGlow.style.top = `${glowY}px`;
-    }
-
-    window.requestAnimationFrame(updateCursor);
-  };
-
-  updateCursor();
-
-  window.addEventListener("pointermove", (event: PointerEvent) => {
-    targetX = event.clientX;
-    targetY = event.clientY;
-  });
-}
-
-if (heroName && cursor) {
-  heroName.addEventListener("pointermove", (event: PointerEvent) => {
-    const rect = heroName.getBoundingClientRect();
-    const relativeX = event.clientX - rect.left;
-    const relativeY = event.clientY - rect.top;
-
-    heroName.style.setProperty("--mx", `${relativeX}px`);
-    heroName.style.setProperty("--my", `${relativeY}px`);
-  });
-
-  heroName.addEventListener("pointerenter", () => {
-    heroName.classList.add("is-hovered");
-    cursor.classList.add("active");
-  });
-
-  heroName.addEventListener("pointerleave", () => {
-    heroName.classList.remove("is-hovered");
-    cursor.classList.remove("active");
-  });
-}
-
-if (heroLower && heroSummary) {
-  const roleLeft = document.querySelector(".role-left") as HTMLElement | null;
-  const roleRight = document.querySelector(".role-right") as HTMLElement | null;
-
-  gsap.set(heroSummary, {
-    y: 40,
-    opacity: 0,
-    willChange: "transform, opacity",
-  });
-
-  if (roleLeft && roleRight) {
-    gsap.set(roleLeft, {
-      x: -100,
-      opacity: 0,
-      willChange: "transform, opacity",
-    });
-    gsap.set(roleRight, {
-      x: 100,
-      opacity: 0,
-      willChange: "transform, opacity",
-    });
-
-    gsap.to(heroSummary, {
-      y: 0,
-      opacity: 1,
-      duration: 0.75,
-      ease: "power3.out",
-      delay: 0.25,
-    });
-
-    gsap
-      .timeline({
-        defaults: { duration: 1.15 },
-        scrollTrigger: {
-          trigger: heroLower,
-          start: "top 75%",
-          end: "top 10%",
-          scrub: 1,
-        },
-      })
-      .to(roleLeft, { x: 0, opacity: 1, ease: "power3.out" }, 0)
-      .to(roleRight, { x: 0, opacity: 1, ease: "power3.out" }, 0)
-      .to(roleLeft, { x: 120, opacity: 0, ease: "power3.in" }, 1.25)
-      .to(roleRight, { x: -120, opacity: 0, ease: "power3.in" }, 1.25)
-      .to(heroSummary, { y: -24, opacity: 0, ease: "power3.in" }, 1.45);
+  if (heroName) {
+    buildFlipCharacters(heroName);
+    enableCharacterFlip(heroName);
   }
-}
 
-const worksRoot = document.getElementById("works-root");
-if (worksRoot) {
-  createRoot(worksRoot).render(
-    createElement(StrictMode, null, createElement(MyWorksScrollDemo)),
-  );
-}
+  if (cursor) {
+    let targetX = window.innerWidth / 2;
+    let targetY = window.innerHeight / 2;
+    let currentX = targetX;
+    let currentY = targetY;
+    let glowX = targetX;
+    let glowY = targetY;
 
-const githubGraphRoot = document.getElementById("github-graph-root");
-if (githubGraphRoot) {
-  createRoot(githubGraphRoot).render(
-    createElement(StrictMode, null, createElement(GithubGraphSection)),
-  );
-}
+    const updateCursor = (): void => {
+      currentX += (targetX - currentX) * 0.24;
+      currentY += (targetY - currentY) * 0.24;
+      glowX += (targetX - glowX) * 0.12;
+      glowY += (targetY - glowY) * 0.12;
 
-const experienceRoot = document.getElementById("experience-root");
-if (experienceRoot) {
-  createRoot(experienceRoot).render(
-    createElement(StrictMode, null, createElement(ExperienceSection)),
-  );
-}
+      cursor.style.left = `${currentX}px`;
+      cursor.style.top = `${currentY}px`;
 
-const achievementsRoot = document.getElementById("achievements-root");
-if (achievementsRoot) {
-  createRoot(achievementsRoot).render(
-    createElement(StrictMode, null, createElement(AchievementsSection)),
-  );
-}
+      if (nameGlow) {
+        nameGlow.style.left = `${glowX}px`;
+        nameGlow.style.top = `${glowY}px`;
+      }
+
+      window.requestAnimationFrame(updateCursor);
+    };
+
+    updateCursor();
+
+    window.addEventListener("pointermove", (event: PointerEvent) => {
+      targetX = event.clientX;
+      targetY = event.clientY;
+    });
+  }
+
+  if (heroName && cursor) {
+    heroName.addEventListener("pointermove", (event: PointerEvent) => {
+      const rect = heroName.getBoundingClientRect();
+      const relativeX = event.clientX - rect.left;
+      const relativeY = event.clientY - rect.top;
+
+      heroName.style.setProperty("--mx", `${relativeX}px`);
+      heroName.style.setProperty("--my", `${relativeY}px`);
+    });
+
+    heroName.addEventListener("pointerenter", () => {
+      heroName.classList.add("is-hovered");
+      cursor.classList.add("active");
+    });
+
+    heroName.addEventListener("pointerleave", () => {
+      heroName.classList.remove("is-hovered");
+      cursor.classList.remove("active");
+    });
+  }
+};
+
+export const initAnimations = (): void => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  const heroLower = document.querySelector(".hero-lower") as HTMLElement | null;
+  const heroSummary = document.querySelector(
+    ".hero-summary",
+  ) as HTMLElement | null;
+
+  if (heroLower && heroSummary) {
+    const roleLeft = document.querySelector(".role-left") as HTMLElement | null;
+    const roleRight = document.querySelector(
+      ".role-right",
+    ) as HTMLElement | null;
+
+    gsap.set(heroSummary, {
+      y: 40,
+      opacity: 0,
+      willChange: "transform, opacity",
+    });
+
+    if (roleLeft && roleRight) {
+      gsap.set(roleLeft, {
+        x: -100,
+        opacity: 0,
+        willChange: "transform, opacity",
+      });
+      gsap.set(roleRight, {
+        x: 100,
+        opacity: 0,
+        willChange: "transform, opacity",
+      });
+
+      gsap.to(heroSummary, {
+        y: 0,
+        opacity: 1,
+        duration: 0.75,
+        ease: "power3.out",
+        delay: 0.25,
+      });
+
+      gsap
+        .timeline({
+          defaults: { duration: 1.15 },
+          scrollTrigger: {
+            trigger: heroLower,
+            start: "top 75%",
+            end: "top 10%",
+            scrub: 1,
+          },
+        })
+        .to(roleLeft, { x: 0, opacity: 1, ease: "power3.out" }, 0)
+        .to(roleRight, { x: 0, opacity: 1, ease: "power3.out" }, 0)
+        .to(roleLeft, { x: 120, opacity: 0, ease: "power3.in" }, 1.25)
+        .to(roleRight, { x: -120, opacity: 0, ease: "power3.in" }, 1.25)
+        .to(heroSummary, { y: -24, opacity: 0, ease: "power3.in" }, 1.45);
+    }
+  }
+
+  ScrollTrigger.refresh();
+};
+
+const bootstrap = async (): Promise<void> => {
+  await waitForDomReady();
+
+  mountReactRoots();
+  initializeLiveTime();
+  initializeHeroInteractions();
+
+  await waitForFontsReady();
+  await waitForLayoutFrame();
+
+  initAnimations();
+};
+
+void bootstrap();
