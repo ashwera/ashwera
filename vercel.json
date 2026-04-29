@@ -4,6 +4,11 @@
       "source": "/resume",
       "destination": "/resume/ashwerahasan.pdf",
       "permanent": false
+    },
+    {
+      "source": "/talk",
+      "destination": "https://meet.google.com/vdr-rvqp-ddd",
+      "permanent": false
     }
   ],
   "rewrites": [{ "source": "/(.*)", "destination": "/" }]

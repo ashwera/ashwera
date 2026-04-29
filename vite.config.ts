@@ -16,6 +16,13 @@ export default defineConfig(({ command }) => ({
             return;
           }
 
+          if (req.url === "/talk") {
+            res.statusCode = 302;
+            res.setHeader("Location", "https://meet.google.com/vdr-rvqp-ddd");
+            res.end();
+            return;
+          }
+
           next();
         });
       },
@@ -30,9 +37,9 @@ export default defineConfig(({ command }) => ({
   build: {
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, 'index.html'),
-        about: path.resolve(__dirname, 'about/index.html')
-      }
-    }
-  }
+        main: path.resolve(__dirname, "index.html"),
+        about: path.resolve(__dirname, "about/index.html"),
+      },
+    },
+  },
 }));
