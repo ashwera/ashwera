@@ -7,6 +7,8 @@ import AchievementsSection from "@/components/ui/achievements-section";
 import ExperienceSection from "@/components/ui/experience-section";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { createAdaptivePreloader } from "@/lib/boot-preloader";
+import { setupSmoothScroll } from "@/lib/smooth-scroll";
 import "./tailwind.css";
 
 const formatTime = (): string => {
@@ -38,12 +40,97 @@ const waitForFontsReady = async (): Promise<void> => {
   }
 };
 
-const waitForLayoutFrame = (): Promise<void> =>
-  new Promise((resolve) => {
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => resolve());
-    });
+const waitForImageDecode = async (image: HTMLImageElement): Promise<void> => {
+  if (image.complete) {
+    if (typeof image.decode === "function" && image.naturalWidth > 0) {
+      await image.decode().catch(() => undefined);
+    }
+    return;
+  }
+
+  await new Promise<void>((resolve) => {
+    image.addEventListener("load", () => resolve(), { once: true });
+    image.addEventListener("error", () => resolve(), { once: true });
   });
+
+  if (typeof image.decode === "function" && image.naturalWidth > 0) {
+    await image.decode().catch(() => undefined);
+  }
+};
+
+const waitForDocumentImages = async (
+  loader: ReturnType<typeof createAdaptivePreloader>,
+): Promise<void> => {
+  const images = Array.from(
+    document.querySelectorAll<HTMLImageElement>("img"),
+  ).filter((image) => !image.closest("#preloader"));
+
+  if (images.length === 0) {
+    return;
+  }
+
+  await Promise.all(
+    images.map((image, index) =>
+      loader.trackPromise(
+        `image:${index}:${image.currentSrc || image.src}`,
+        waitForImageDecode(image),
+        {
+          kind: "images",
+          weight: 1,
+          estimateMs: 520 + index * 18,
+        },
+      ),
+    ),
+  );
+};
+
+const waitForStableFrames = async (
+  loader: ReturnType<typeof createAdaptivePreloader>,
+  taskId: string,
+  requiredStableFrames = 3,
+): Promise<void> => {
+  loader.addTask(taskId, {
+    kind: "layout",
+    weight: 1,
+    estimateMs: 360,
+  });
+
+  let stableFrames = 0;
+  let lastSignature = "";
+
+  await new Promise<void>((resolve) => {
+    const sample = () => {
+      const root = document.documentElement;
+      const body = document.body;
+      const signature = [
+        root.scrollWidth,
+        root.scrollHeight,
+        root.clientWidth,
+        root.clientHeight,
+        body.offsetHeight,
+      ].join("x");
+
+      if (signature === lastSignature) {
+        stableFrames += 1;
+      } else {
+        stableFrames = 0;
+        lastSignature = signature;
+      }
+
+      loader.setTaskProgress(taskId, stableFrames / requiredStableFrames);
+
+      if (stableFrames >= requiredStableFrames) {
+        loader.completeTask(taskId);
+        resolve();
+        return;
+      }
+
+      window.requestAnimationFrame(sample);
+    };
+
+    window.requestAnimationFrame(sample);
+  });
+};
 
 const mountReactRoots = (): void => {
   const worksRoot = document.getElementById("works-root");
@@ -271,16 +358,52 @@ export const initAnimations = (): void => {
 };
 
 const bootstrap = async (): Promise<void> => {
-  await waitForDomReady();
+  const preloader = document.getElementById("preloader");
+  const loader = createAdaptivePreloader(preloader);
 
+  await loader.trackPromise("dom", waitForDomReady(), {
+    kind: "dom",
+    weight: 1,
+  });
+
+  loader.addTask("init", {
+    kind: "init",
+    weight: 1,
+    estimateMs: 440,
+  });
   mountReactRoots();
   initializeLiveTime();
   initializeHeroInteractions();
+  loader.completeTask("init");
 
-  await waitForFontsReady();
-  await waitForLayoutFrame();
+  const shouldEnableLenis =
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+    window.matchMedia("(pointer: fine)").matches;
+
+  await loader.trackPromise(
+    "smooth-scroll",
+    setupSmoothScroll(shouldEnableLenis).catch(() => ({
+      destroy: () => undefined,
+    })),
+    {
+      kind: "smooth-scroll",
+      weight: 1,
+      estimateMs: 420,
+    },
+  );
+
+  await loader.trackPromise("fonts", waitForFontsReady(), {
+    kind: "fonts",
+    weight: 1,
+  });
+
+  await waitForDocumentImages(loader);
 
   initAnimations();
+
+  await waitForStableFrames(loader, "layout-settle", 4);
+
+  await loader.markReady();
 };
 
 void bootstrap();

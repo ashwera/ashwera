@@ -24,9 +24,81 @@ body {
   overflow-x: clip;
 }
 
+body.is-loading {
+  overflow: hidden;
+}
+
+html[data-loader="active"] {
+  overflow: hidden;
+}
+
+body.is-loading .bg-texture,
+body.is-loading .topbar,
+body.is-loading .home,
+body.is-loading main,
+body.is-loading .name-glow,
+body.is-loading .name-cursor {
+  visibility: hidden;
+}
+
 a {
   color: inherit;
   text-decoration: none;
+}
+
+.preloader {
+  --loader-progress: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  color: #111;
+  background: #fff;
+  opacity: 1;
+  filter: blur(0px);
+  transform: translateZ(0);
+  will-change: opacity, filter;
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    filter 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.preloader::before {
+  content: none;
+}
+
+.preloader-inner {
+  position: relative;
+  width: min(72vw, 680px);
+}
+
+.preloader-line {
+  width: min(72vw, 680px);
+  height: 1px;
+  overflow: hidden;
+  background: rgba(17, 17, 17, 0.12);
+}
+
+.preloader-line span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(var(--loader-progress));
+  transform-origin: left center;
+  background: #111;
+  will-change: transform;
+}
+
+body.is-ready .preloader,
+.preloader.is-closing {
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(10px);
+}
+
+.preloader.is-hidden {
+  display: none;
 }
 
 .bg-texture {
@@ -431,4 +503,11 @@ a {
 
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader,
+  .preloader-line span {
+    transition-duration: 1ms;
+  }
 }

@@ -113,93 +113,21 @@ function parseSortDate(dates: string) {
   return Number(end[2]) * 12 + endMonth;
 }
 
-function useReveal<T extends HTMLElement>() {
-  const ref = React.useRef<T>(null);
-  const [isVisible, setIsVisible] = React.useState(false);
-
-  React.useEffect(() => {
-    const node = ref.current;
-
-    if (!node) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.18 },
-    );
-
-    observer.observe(node);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  return { ref, isVisible };
-}
-
 export default function ExperienceSection() {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [hasEntered, setHasEntered] = React.useState(false);
-  const sectionRef = React.useRef<HTMLElement>(null);
   const experiences = React.useMemo(
     () => parseResumeExperience(resumeExperience),
     [],
   );
 
-  React.useEffect(() => {
-    const section = sectionRef.current;
-
-    if (!section) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEntered(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { rootMargin: "0px 0px -18% 0px", threshold: 0.16 },
-    );
-
-    observer.observe(section);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (!hasEntered) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      setIsLoading(false);
-    }, 950);
-
-    return () => {
-      window.clearTimeout(timer);
-    };
-  }, [hasEntered]);
-
   return (
     <section
-      ref={sectionRef}
       className="w-full overflow-hidden px-4 py-14 text-black sm:px-6 sm:py-18 lg:px-8"
     >
       <div className="mx-auto w-full max-w-7xl">
         <motion.h2
           initial={{ opacity: 0, y: 18 }}
-          animate={hasEntered ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-18% 0px" }}
           transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
           className="mb-8 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl"
         >
@@ -207,17 +135,13 @@ export default function ExperienceSection() {
         </motion.h2>
 
         <div className="space-y-1.5">
-          {!hasEntered || isLoading
-            ? experiences.map((experience, index) => (
-                <ExperienceSkeleton key={experience.company} index={index} />
-              ))
-            : experiences.map((experience, index) => (
-                <ExperienceItem
-                  key={`${experience.role}-${experience.company}`}
-                  experience={experience}
-                  index={index}
-                />
-              ))}
+          {experiences.map((experience, index) => (
+            <ExperienceItem
+              key={`${experience.role}-${experience.company}`}
+              experience={experience}
+              index={index}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -231,13 +155,11 @@ export function ExperienceItem({
   experience: ParsedExperience;
   index: number;
 }) {
-  const { ref, isVisible } = useReveal<HTMLElement>();
-
   return (
     <motion.article
-      ref={ref}
       initial={{ opacity: 0, y: 18 }}
-      animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-12% 0px" }}
       transition={{
         duration: 0.36,
         delay: index * 0.08,
@@ -269,41 +191,5 @@ export function ExperienceItem({
         {experience.impact}
       </p>
     </motion.article>
-  );
-}
-
-export function ExperienceSkeleton({ index }: { index: number }) {
-  return (
-    <div
-      className="grid animate-[skeleton-reveal_420ms_ease-out_both] gap-3 rounded-xl px-2 py-3 sm:grid-cols-[minmax(320px,0.62fr)_1fr] sm:gap-10 sm:px-3 sm:py-4 lg:grid-cols-[minmax(380px,0.55fr)_1fr] lg:gap-16"
-      style={{ animationDelay: `${index * 130}ms` }}
-      aria-hidden="true"
-    >
-      <div className="flex gap-3">
-        <div className="h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-black/[0.06]">
-          <div className="h-full w-full animate-shimmer bg-[linear-gradient(110deg,transparent_0%,rgba(255,255,255,0.78)_42%,transparent_76%)] bg-[length:220%_100%]" />
-        </div>
-        <div className="w-full max-w-[220px] space-y-2">
-          <SkeletonLine className="h-3.5 w-4/5" />
-          <SkeletonLine className="h-3 w-3/5" />
-          <SkeletonLine className="h-3 w-2/5" />
-        </div>
-      </div>
-
-      <div className="space-y-2 sm:pt-1">
-        <SkeletonLine className="h-3.5 w-full" />
-        <SkeletonLine className="h-3.5 w-10/12" />
-      </div>
-    </div>
-  );
-}
-
-function SkeletonLine({ className }: { className: string }) {
-  return (
-    <div
-      className={`overflow-hidden rounded-full bg-black/[0.06] ${className}`}
-    >
-      <div className="h-full w-full animate-shimmer bg-[linear-gradient(110deg,transparent_0%,rgba(255,255,255,0.82)_42%,transparent_76%)] bg-[length:220%_100%]" />
-    </div>
   );
 }

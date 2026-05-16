@@ -1,5 +1,6 @@
 import React from "react";
-import { motion } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 type Achievement = {
   title: string;
@@ -31,152 +32,148 @@ const accents = [
 ];
 
 export default function AchievementsSection() {
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const sectionRef = React.useRef<HTMLElement>(null);
+  const cardRefs = React.useRef<HTMLElement[]>([]);
 
-  const showPrevious = () => {
-    setActiveIndex((index) =>
-      index === 0 ? achievements.length - 1 : index - 1,
-    );
-  };
+  React.useLayoutEffect(() => {
+    let context: gsap.Context | undefined;
+    let cancelled = false;
 
-  const showNext = () => {
-    setActiveIndex((index) => (index + 1) % achievements.length);
-  };
+    const initStack = async () => {
+      if ("fonts" in document) {
+        await document.fonts.ready;
+      }
+
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => resolve());
+        });
+      });
+
+      if (cancelled || !sectionRef.current) return;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      context = gsap.context(() => {
+        const cards = cardRefs.current.filter(Boolean);
+
+        gsap.set(cards, {
+          y: 100,
+          opacity: 0,
+          scale: 0.96,
+          zIndex: (i) => i + 1,
+        });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            pin: true,
+            scrub: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            end: () => `+=${cards.length * window.innerHeight * 0.7}`,
+          },
+        });
+
+        cards.forEach((card, i) => {
+          tl.to(
+            card,
+            {
+              y: 0,
+              opacity: 1,
+              scale: 1,
+              duration: 1,
+              ease: "power3.out",
+            },
+            i * 0.82,
+          );
+        });
+
+        ScrollTrigger.refresh();
+      }, sectionRef);
+    };
+
+    initStack();
+
+    return () => {
+      cancelled = true;
+      context?.revert();
+    };
+  }, []);
 
   return (
-    <section className="relative w-full overflow-hidden px-4 py-20 text-black sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-center">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto max-w-5xl text-center"
-        >
-          <p className="text-xs font-bold uppercase tracking-[0.28em] text-black/42">
-            Recognition
-          </p>
-          <h2 className="mt-1 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-8xl lg:text-8.5xl">
-            Achievements & <br /> Recognition
-          </h2>
-          <p className="mx-auto mt-2 max-w-2xl text-base leading-relaxed tracking-[0.01em] text-black/70 sm:text-lg">
-            Still learning, always shipping.
-          </p>
-        </motion.div>
+    <section
+      ref={sectionRef}
+      className="relative min-h-screen w-full overflow-x-hidden px-6 py-20 text-black"
+    >
+      {/* MAIN LAYOUT */}
+      <div className="w-full px-6">
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          {/* LEFT */}
+          <div className="md:sticky md:top-[20vh]">
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-black/40">
+              Recognition
+            </p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 34 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{
-            duration: 0.55,
-            delay: 0.12,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="relative mt-12 flex w-full max-w-5xl items-center justify-center"
-        >
-          <button
-            type="button"
-            onClick={showPrevious}
-            className="absolute left-0 z-30 grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white/55 text-xl leading-none text-black/70 shadow-[0_12px_40px_rgba(0,0,0,0.08)] backdrop-blur transition hover:bg-white hover:text-black sm:left-6"
-            aria-label="Previous achievement"
-          >
-            ‹
-          </button>
+            <h2 className="mt-1 font-['Bebas_Neue'] text-6xl uppercase leading-none sm:text-7xl lg:text-8xl">
+              Achievements & <br /> Recognition
+            </h2>
 
-          <div className="relative mx-auto flex h-[380px] w-full max-w-[820px] items-center justify-center">
-            {achievements.map((achievement, index) => {
-              const position =
-                (index - activeIndex + achievements.length) %
-                achievements.length;
-              const isFront = position === 0;
-              const stackPosition = position > 2 ? -1 : position;
-
-              return (
-                <AchievementCard
-                  key={achievement.title}
-                  achievement={achievement}
-                  index={index}
-                  stackPosition={stackPosition}
-                  isFront={isFront}
-                />
-              );
-            })}
+            <p className="mt-4 max-w-sm text-base leading-relaxed text-black/70">
+              Still learning, always shipping.
+            </p>
           </div>
 
-          <button
-            type="button"
-            onClick={showNext}
-            className="absolute right-0 z-30 grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white/55 text-xl leading-none text-black/70 shadow-[0_12px_40px_rgba(0,0,0,0.08)] backdrop-blur transition hover:bg-white hover:text-black sm:right-6"
-            aria-label="Next achievement"
-          >
-            ›
-          </button>
-        </motion.div>
-
-        <div className="mt-8 flex items-center justify-center gap-2">
-          {achievements.map((achievement, index) => (
-            <button
-              key={achievement.title}
-              type="button"
-              onClick={() => setActiveIndex(index)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                activeIndex === index
-                  ? "w-7 bg-black"
-                  : "w-2.5 bg-black/22 hover:bg-black/38"
-              }`}
-              aria-label={`Show achievement ${index + 1}`}
-            />
-          ))}
+          {/* RIGHT */}
+          <div className="w-full flex justify-end">
+            <div className="relative w-[480px] max-w-[90%]">
+              <div
+                className="relative w-full"
+                style={{ aspectRatio: "16/10", minHeight: "280px" }}
+              >
+                {achievements.map((achievement, index) => (
+                  <AchievementCard
+                    key={achievement.title}
+                    ref={(node) => {
+                      if (node) cardRefs.current[index] = node;
+                    }}
+                    achievement={achievement}
+                    index={index}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-function AchievementCard({
-  achievement,
-  index,
-  stackPosition,
-  isFront,
-}: {
-  achievement: Achievement;
-  index: number;
-  stackPosition: number;
-  isFront: boolean;
-}) {
-  const visiblePosition = stackPosition < 0 ? 2 : stackPosition;
-  const y = visiblePosition * 22;
-  const scale = visiblePosition === 0 ? 1 : visiblePosition === 1 ? 0.95 : 0.9;
-  const opacity =
-    visiblePosition === 0 ? 1 : visiblePosition === 1 ? 0.72 : 0.42;
-
+const AchievementCard = React.forwardRef<
+  HTMLElement,
+  { achievement: Achievement; index: number }
+>(function AchievementCard({ achievement, index }, ref) {
   return (
-    <motion.article
-      className={`absolute left-1/2 top-1/2 flex min-h-[280px] w-[min(88vw,760px)] -translate-x-1/2 -translate-y-1/2 flex-col justify-between overflow-hidden rounded-[22px] border border-black/10 p-8 shadow-[0_24px_90px_rgba(0,0,0,0.18)] will-change-transform sm:p-10 md:min-h-[360px] md:w-[min(76vw,820px)] ${
+    <article
+      ref={ref}
+      className={`absolute left-0 top-0 flex h-full w-full flex-col justify-between overflow-hidden rounded-xl border border-black/10 p-8 shadow-[0_24px_90px_rgba(0,0,0,0.18)] will-change-transform sm:p-10 ${
         accents[index % accents.length]
       }`}
-      animate={{
-        x: "-50%",
-        y: `calc(-50% + ${y}px)`,
-        scale,
-        opacity,
-        zIndex: achievements.length - visiblePosition,
-      }}
-      transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-      aria-hidden={!isFront}
     >
       <span className="text-xs font-bold uppercase tracking-[0.28em] opacity-55">
         0{index + 1}
       </span>
+
       <div>
-        <h3 className="font-['Bebas_Neue'] text-5xl font-normal uppercase leading-none sm:text-7xl md:text-8xl">
+        <h3 className="font-['Bebas_Neue'] text-5xl uppercase leading-none sm:text-7xl md:text-8xl">
           {achievement.title}
         </h3>
+
         <p className="mt-5 max-w-xl text-base font-semibold leading-7 opacity-70 sm:text-xl">
           {achievement.description}
         </p>
       </div>
-    </motion.article>
+    </article>
   );
-}
+});
