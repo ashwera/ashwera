@@ -12,11 +12,11 @@ type HeatmapPanel = {
   platform: string;
   accent: string;
   colorScale: string[];
+  emptyCell: string;
   loadEntries: () => Promise<HeatmapEntry[]>;
 };
 
 /* ── tonal color scales derived from site palette ──────────────── */
-const EMPTY_CELL = "rgba(0,0,0,0.06)";
 
 const panels: HeatmapPanel[] = [
   {
@@ -29,6 +29,7 @@ const panels: HeatmapPanel[] = [
       "rgba(180,90,84,0.92)",
       "rgba(164,68,62,1)",
     ],
+    emptyCell: "rgba(217,162,160,0.08)",
     loadEntries: loadLeetcodeHeatmap,
   },
   {
@@ -41,6 +42,7 @@ const panels: HeatmapPanel[] = [
       "rgba(148,52,46,0.86)",
       "rgba(132,40,34,1)",
     ],
+    emptyCell: "rgba(180,90,84,0.08)",
     loadEntries: loadGitHubFallbackHeatmap,
   },
   {
@@ -53,6 +55,7 @@ const panels: HeatmapPanel[] = [
       "rgba(72,112,170,0.86)",
       "rgba(56,96,156,1)",
     ],
+    emptyCell: "rgba(0,0,0,0.06)",
     loadEntries: loadCodeforcesHeatmap,
   },
 ];
@@ -89,7 +92,7 @@ export default function GithubGraphSection() {
       <div className="sticky top-0 flex min-h-screen items-center overflow-visible py-12">
         <div className="w-full max-w-none">
           {/* ── section header ── */}
-          <div className="mb-3">
+          <div className="mb-1">
             <h2 className="mt-1 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl lg:text-8xl">
               Heatmaps
             </h2>
@@ -161,17 +164,17 @@ function HeatmapCard({ panel }: { panel: HeatmapPanel }) {
 
   return (
     <div
-      className="absolute inset-0 flex items-start justify-center pt-6 sm:pt-8"
+      className="absolute inset-0 flex items-start justify-center pt-2 sm:pt-3"
       style={
         {
           // GitHub-like proportions: ~12px cells, ~4px gaps at ~844px width
           // Clamp keeps the grid responsive without over-scaling on wide screens.
-          "--heatmap-cell": "clamp(10px, 1.6vw, 14px)",
-          "--heatmap-gap": "clamp(3px, 0.7vw, 5px)",
+          "--heatmap-cell": "clamp(11px, 1.75vw, 15px)",
+          "--heatmap-gap": "clamp(3px, 0.75vw, 6px)",
         } as React.CSSProperties
       }
     >
-      <div className="w-full max-w-[860px] rounded-3xl bg-white/95 px-4 py-4 shadow-[0_8px_24px_rgba(0,0,0,0.04)] backdrop-blur-[1px] sm:px-6 sm:py-6 isolate">
+      <div className="w-full max-w-[940px] rounded-2xl bg-[#fdfdfd] px-4 py-4 shadow-none border border-black/[0.06] sm:px-6 sm:py-5 isolate">
         <div className="mb-3 flex items-center justify-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/50">
             {panel.platform}
@@ -180,10 +183,11 @@ function HeatmapCard({ panel }: { panel: HeatmapPanel }) {
         <HeatmapGrid
           entries={entries}
           colorScale={panel.colorScale}
+          emptyCell={panel.emptyCell}
           isLoaded={isLoaded}
           accent={panel.accent}
         />
-        <p className="mt-3 text-center text-[11px] font-medium uppercase tracking-[0.18em] text-black/45">
+        <p className="mt-3 text-right text-[11px] font-medium uppercase tracking-[0.18em] text-black/40">
           {totalCount.toLocaleString("en-US")} submissions this year
         </p>
       </div>
@@ -196,11 +200,13 @@ function HeatmapCard({ panel }: { panel: HeatmapPanel }) {
 function HeatmapGrid({
   entries,
   colorScale,
+  emptyCell,
   isLoaded,
   accent,
 }: {
   entries: HeatmapEntry[];
   colorScale: string[];
+  emptyCell: string;
   isLoaded: boolean;
   accent: string;
 }) {
@@ -209,7 +215,7 @@ function HeatmapGrid({
   const labels = monthLabels(entries);
 
   return (
-    <div className="mx-auto w-full max-w-[860px]">
+    <div className="mx-auto w-full max-w-[940px]">
       <div
         className="mb-2 grid"
         style={{
@@ -250,7 +256,7 @@ function HeatmapGrid({
               if (!entry) return null;
 
               const level = intensityLevel(entry.count, maxCount);
-              const bg = level === 0 ? EMPTY_CELL : colorScale[level - 1];
+              const bg = level === 0 ? emptyCell : colorScale[level - 1];
               const isHovered = hoveredIndex === cellIndex;
               const animationDelay = isLoaded
                 ? weekIndex * 8 + dayIndex * 4

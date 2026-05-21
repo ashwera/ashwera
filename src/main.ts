@@ -5,6 +5,7 @@ import MyWorksScrollDemo from "@/components/ui/demo";
 import GithubGraphSection from "@/components/ui/github-graph-section";
 import AchievementsSection from "@/components/ui/achievements-section";
 import ExperienceSection from "@/components/ui/experience-section";
+import FooterSection from "@/components/ui/footer-section";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { createAdaptivePreloader } from "@/lib/boot-preloader";
@@ -130,6 +131,15 @@ const mountReactRoots = (): void => {
     flushSync(() => {
       createRoot(achievementsRoot).render(
         createElement(StrictMode, null, createElement(AchievementsSection)),
+      );
+    });
+  }
+
+  const footerRoot = document.getElementById("footer-root");
+  if (footerRoot) {
+    flushSync(() => {
+      createRoot(footerRoot).render(
+        createElement(StrictMode, null, createElement(FooterSection)),
       );
     });
   }
