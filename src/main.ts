@@ -41,20 +41,33 @@ const waitForFontsReady = async (): Promise<void> => {
 };
 
 const waitForImageDecode = async (image: HTMLImageElement): Promise<void> => {
+  // Already loaded
   if (image.complete) {
     if (typeof image.decode === "function" && image.naturalWidth > 0) {
-      await image.decode().catch(() => undefined);
+      await Promise.race([
+        image.decode().catch(() => undefined),
+        new Promise((resolve) => setTimeout(resolve, 2000)),
+      ]);
     }
     return;
   }
 
-  await new Promise<void>((resolve) => {
-    image.addEventListener("load", () => resolve(), { once: true });
-    image.addEventListener("error", () => resolve(), { once: true });
-  });
+  // Wait for load/error OR timeout
+  await Promise.race([
+    new Promise<void>((resolve) => {
+      image.addEventListener("load", () => resolve(), { once: true });
+      image.addEventListener("error", () => resolve(), { once: true });
+    }),
+    new Promise<void>((resolve) => {
+      setTimeout(resolve, 3000);
+    }),
+  ]);
 
   if (typeof image.decode === "function" && image.naturalWidth > 0) {
-    await image.decode().catch(() => undefined);
+    await Promise.race([
+      image.decode().catch(() => undefined),
+      new Promise((resolve) => setTimeout(resolve, 2000)),
+    ]);
   }
 };
 
@@ -63,7 +76,7 @@ const waitForDocumentImages = async (
 ): Promise<void> => {
   const images = Array.from(
     document.querySelectorAll<HTMLImageElement>("img"),
-  ).filter((image) => !image.closest("#preloader"));
+  ).filter((image) => !image.closest("#preloader") && image.loading !== "lazy");
 
   if (images.length === 0) {
     return;
@@ -82,54 +95,6 @@ const waitForDocumentImages = async (
       ),
     ),
   );
-};
-
-const waitForStableFrames = async (
-  loader: ReturnType<typeof createAdaptivePreloader>,
-  taskId: string,
-  requiredStableFrames = 3,
-): Promise<void> => {
-  loader.addTask(taskId, {
-    kind: "layout",
-    weight: 1,
-    estimateMs: 360,
-  });
-
-  let stableFrames = 0;
-  let lastSignature = "";
-
-  await new Promise<void>((resolve) => {
-    const sample = () => {
-      const root = document.documentElement;
-      const body = document.body;
-      const signature = [
-        root.scrollWidth,
-        root.scrollHeight,
-        root.clientWidth,
-        root.clientHeight,
-        body.offsetHeight,
-      ].join("x");
-
-      if (signature === lastSignature) {
-        stableFrames += 1;
-      } else {
-        stableFrames = 0;
-        lastSignature = signature;
-      }
-
-      loader.setTaskProgress(taskId, stableFrames / requiredStableFrames);
-
-      if (stableFrames >= requiredStableFrames) {
-        loader.completeTask(taskId);
-        resolve();
-        return;
-      }
-
-      window.requestAnimationFrame(sample);
-    };
-
-    window.requestAnimationFrame(sample);
-  });
 };
 
 const mountReactRoots = (): void => {
@@ -248,6 +213,7 @@ const initializeHeroInteractions = (): void => {
     let currentY = targetY;
     let glowX = targetX;
     let glowY = targetY;
+    let rafId = 0;
 
     const updateCursor = (): void => {
       currentX += (targetX - currentX) * 0.24;
@@ -255,15 +221,23 @@ const initializeHeroInteractions = (): void => {
       glowX += (targetX - glowX) * 0.12;
       glowY += (targetY - glowY) * 0.12;
 
-      cursor.style.left = `${currentX}px`;
-      cursor.style.top = `${currentY}px`;
+      cursor.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
 
       if (nameGlow) {
-        nameGlow.style.left = `${glowX}px`;
-        nameGlow.style.top = `${glowY}px`;
+        nameGlow.style.transform = `translate3d(${glowX}px, ${glowY}px, 0) translate(-50%, -50%)`;
       }
 
-      window.requestAnimationFrame(updateCursor);
+      const cursorSettled =
+        Math.abs(targetX - currentX) < 0.1 && Math.abs(targetY - currentY) < 0.1;
+      const glowSettled =
+        Math.abs(targetX - glowX) < 0.1 && Math.abs(targetY - glowY) < 0.1;
+
+      if (cursorSettled && glowSettled) {
+        rafId = 0;
+        return;
+      }
+
+      rafId = window.requestAnimationFrame(updateCursor);
     };
 
     updateCursor();
@@ -271,7 +245,11 @@ const initializeHeroInteractions = (): void => {
     window.addEventListener("pointermove", (event: PointerEvent) => {
       targetX = event.clientX;
       targetY = event.clientY;
-    });
+
+      if (rafId === 0) {
+        rafId = window.requestAnimationFrame(updateCursor);
+      }
+    }, { passive: true });
   }
 
   if (heroName && cursor) {
@@ -376,9 +354,7 @@ const bootstrap = async (): Promise<void> => {
   initializeHeroInteractions();
   loader.completeTask("init");
 
-  const shouldEnableLenis =
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-    window.matchMedia("(pointer: fine)").matches;
+  const shouldEnableLenis = false;
 
   await loader.trackPromise(
     "smooth-scroll",
@@ -400,8 +376,6 @@ const bootstrap = async (): Promise<void> => {
   await waitForDocumentImages(loader);
 
   initAnimations();
-
-  await waitForStableFrames(loader, "layout-settle", 4);
 
   await loader.markReady();
 };

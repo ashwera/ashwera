@@ -111,11 +111,11 @@ export default function AchievementsSection() {
         <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           {/* LEFT */}
           <div className="md:sticky md:top-[20vh]">
-            <p className="text-xs font-bold uppercase tracking-[0.28em] text-black/40">
+            {/* <p className="text-xs font-bold uppercase tracking-[0.28em] text-black/40">
               Recognition
-            </p>
+            </p> */}
 
-            <h2 className="mt-1 font-['Bebas_Neue'] text-6xl uppercase leading-none sm:text-7xl lg:text-8xl">
+            <h2 className="mt-1 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl lg:text-8xl">
               Achievements & <br /> Recognition
             </h2>
 

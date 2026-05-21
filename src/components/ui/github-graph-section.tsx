@@ -10,35 +10,54 @@ type HeatmapEntry = {
 
 type HeatmapPanel = {
   platform: string;
-  title: string;
-  href: string;
   accent: string;
+  colorScale: string[];
   loadEntries: () => Promise<HeatmapEntry[]>;
 };
+
+/* ── tonal color scales derived from site palette ──────────────── */
+const EMPTY_CELL = "rgba(0,0,0,0.06)";
 
 const panels: HeatmapPanel[] = [
   {
     platform: "LeetCode",
-    title: "Practice Heatmap",
-    href: `https://leetcode.com/${username}`,
     accent: "#d9a2a0",
+    colorScale: [
+      "rgba(217,162,160,0.38)",
+      "rgba(217,162,160,0.56)",
+      "rgba(196,120,116,0.72)",
+      "rgba(180,90,84,0.92)",
+      "rgba(164,68,62,1)",
+    ],
     loadEntries: loadLeetcodeHeatmap,
   },
   {
     platform: "GitHub",
-    title: "Commit Heatmap",
-    href: `https://github.com/${username}`,
     accent: "#b45a54",
+    colorScale: [
+      "rgba(180,90,84,0.36)",
+      "rgba(180,90,84,0.52)",
+      "rgba(164,68,62,0.68)",
+      "rgba(148,52,46,0.86)",
+      "rgba(132,40,34,1)",
+    ],
     loadEntries: loadGitHubFallbackHeatmap,
   },
   {
     platform: "Codeforces",
-    title: "Submission Heatmap",
-    href: `https://codeforces.com/profile/${username}`,
     accent: "#6f95c7",
+    colorScale: [
+      "rgba(111,149,199,0.36)",
+      "rgba(111,149,199,0.52)",
+      "rgba(90,130,185,0.68)",
+      "rgba(72,112,170,0.86)",
+      "rgba(56,96,156,1)",
+    ],
     loadEntries: loadCodeforcesHeatmap,
   },
 ];
+
+/* ── main section (scroll choreography preserved) ──────────────── */
 
 export default function GithubGraphSection() {
   const sectionRef = React.useRef<HTMLElement>(null);
@@ -63,27 +82,21 @@ export default function GithubGraphSection() {
       ref={sectionRef}
       className="relative h-[300vh] w-full px-4 sm:px-6 lg:px-8"
     >
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-black/[0.04] via-white to-white" />
+        <div className="absolute left-1/2 top-24 h-80 w-80 -translate-x-1/2 rounded-full bg-black/[0.04] blur-[120px]" />
+      </div>
       <div className="sticky top-0 flex min-h-screen items-center overflow-visible py-12">
-        <div className="mx-auto w-full max-w-7xl">
-          <div className="mb-1 flex flex-wrap items-end justify-between gap-5">
-            <div>
-              <h2 className="mt-1 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl">
-                The Grind
-              </h2>
-            </div>
-
-            <div className="flex gap-2" aria-hidden="true">
-              {panels.map((panel) => (
-                <span
-                  key={panel.platform}
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: panel.accent }}
-                />
-              ))}
-            </div>
+        <div className="w-full max-w-none">
+          {/* ── section header ── */}
+          <div className="mb-3">
+            <h2 className="mt-1 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl lg:text-8xl">
+              Heatmaps
+            </h2>
           </div>
 
-          <div className="relative h-[280px] sm:h-[300px]">
+          {/* ── stacked heatmap cards ── */}
+          <div className="relative h-[360px] w-full sm:h-[440px]">
             <motion.div
               className="absolute inset-0 z-10"
               style={{ scale: leetcodeScale }}
@@ -109,9 +122,16 @@ export default function GithubGraphSection() {
   );
 }
 
+/* ── heatmap card ──────────────────────────────────────────────── */
+
 function HeatmapCard({ panel }: { panel: HeatmapPanel }) {
   const [entries, setEntries] = React.useState<HeatmapEntry[]>(() =>
     buildFallbackHeatmap(panel.platform),
+  );
+  const [isLoaded, setIsLoaded] = React.useState(false);
+  const totalCount = React.useMemo(
+    () => entries.reduce((sum, entry) => sum + entry.count, 0),
+    [entries],
   );
 
   React.useEffect(() => {
@@ -124,87 +144,152 @@ function HeatmapCard({ panel }: { panel: HeatmapPanel }) {
           setEntries(nextEntries);
         }
       })
-      .catch(() => undefined);
+      .catch(() => undefined)
+      .finally(() => {
+        if (active) setIsLoaded(true);
+      });
 
     return () => {
       active = false;
     };
   }, [panel]);
 
-  return (
-    <div className="group relative h-full overflow-visible after:pointer-events-none after:absolute after:inset-x-8 after:-bottom-36 after:z-0 after:h-80 after:bg-[radial-gradient(ellipse_at_top,rgba(0,0,0,0.20),rgba(0,0,0,0.09)_44%,rgba(0,0,0,0)_78%)] after:blur-3xl after:content-['']">
-      <a
-        href={panel.href}
-        target="_blank"
-        rel="noreferrer"
-        className="relative z-10 block h-full overflow-hidden rounded-[28px] border border-white/[0.06] bg-[#0f1116] p-3 shadow-[0_34px_96px_rgba(0,0,0,0.14),0_72px_190px_rgba(0,0,0,0.08),0_128px_280px_rgba(0,0,0,0.045)] transition duration-300 hover:-translate-y-1 sm:p-5"
-      >
-        <div className="relative z-10 mb-3 flex items-center justify-between gap-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.05em] text-[#f5f5f5]">
-            {username}
-          </p>
-          <div className="flex items-center gap-2">
-            <span
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: panel.accent }}
-            />
-            <p className="text-xs font-semibold uppercase tracking-[0.05em] text-[#f5f5f5]">
-              {panel.platform}
-            </p>
-          </div>
-        </div>
+  React.useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
-        <div className="relative z-10 grid h-[220px] place-items-center overflow-visible rounded-2xl border border-white/[0.07] bg-[#0b0d12] px-4 pb-7 pt-5 shadow-[inset_0_-40px_80px_rgba(255,255,255,0.025)] sm:h-[232px]">
-          <HeatmapGrid entries={entries} />
+  return (
+    <div
+      className="absolute inset-0 flex items-start justify-center pt-6 sm:pt-8"
+      style={
+        {
+          // GitHub-like proportions: ~12px cells, ~4px gaps at ~844px width
+          // Clamp keeps the grid responsive without over-scaling on wide screens.
+          "--heatmap-cell": "clamp(10px, 1.6vw, 14px)",
+          "--heatmap-gap": "clamp(3px, 0.7vw, 5px)",
+        } as React.CSSProperties
+      }
+    >
+      <div className="w-full max-w-[860px] rounded-3xl bg-white/95 px-4 py-4 shadow-[0_8px_24px_rgba(0,0,0,0.04)] backdrop-blur-[1px] sm:px-6 sm:py-6 isolate">
+        <div className="mb-3 flex items-center justify-center">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/50">
+            {panel.platform}
+          </p>
         </div>
-      </a>
+        <HeatmapGrid
+          entries={entries}
+          colorScale={panel.colorScale}
+          isLoaded={isLoaded}
+          accent={panel.accent}
+        />
+        <p className="mt-3 text-center text-[11px] font-medium uppercase tracking-[0.18em] text-black/45">
+          {totalCount.toLocaleString("en-US")} submissions this year
+        </p>
+      </div>
     </div>
   );
 }
 
-function HeatmapGrid({ entries }: { entries: HeatmapEntry[] }) {
+/* ── heatmap grid (GitHub-style layout) ──────────────────────────── */
+
+function HeatmapGrid({
+  entries,
+  colorScale,
+  isLoaded,
+  accent,
+}: {
+  entries: HeatmapEntry[];
+  colorScale: string[];
+  isLoaded: boolean;
+  accent: string;
+}) {
   const maxCount = Math.max(1, ...entries.map((entry) => entry.count));
+  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
   const labels = monthLabels(entries);
 
   return (
-    <div className="w-full">
-      <div className="mb-2 grid grid-cols-[repeat(24,minmax(0,1fr))] text-xs font-semibold uppercase tracking-[0.05em] text-[#cccccc]">
+    <div className="mx-auto w-full max-w-[860px]">
+      <div
+        className="mb-2 grid"
+        style={{
+          gridTemplateColumns: "repeat(52, minmax(0, var(--heatmap-cell)))",
+          columnGap: "var(--heatmap-gap)",
+        }}
+      >
         {labels.map((label) => (
           <span
             key={`${label.month}-${label.column}`}
-            className="col-span-1"
+            className="text-[10px] font-medium uppercase tracking-[0.14em] text-black/40"
             style={{ gridColumnStart: label.column + 1 }}
           >
             {label.month}
           </span>
         ))}
       </div>
-      <div className="grid h-[120px] grid-cols-[repeat(24,minmax(0,1fr))] grid-rows-[repeat(7,minmax(0,1fr))] gap-1 overflow-hidden sm:h-[128px]">
-        {entries.map((entry) => (
-          <span
-            key={entry.date}
-            title={`${entry.date}: ${entry.count}`}
-            className="h-full w-full rounded-[4px] border border-white/[0.04]"
-            style={{ backgroundColor: heatColor(entry.count, maxCount) }}
-          />
+      {/* GitHub-like grid: 7 rows (days) × 24 columns (weeks) */}
+      <div
+        className="grid w-full"
+        style={{
+          gridTemplateColumns: "repeat(52, minmax(0, var(--heatmap-cell)))",
+          gap: "var(--heatmap-gap)",
+          justifyContent: "center",
+          justifyItems: "center",
+        }}
+      >
+        {Array.from({ length: 52 }).map((_, weekIndex) => (
+          <div
+            key={weekIndex}
+            className="grid grid-rows-7"
+            style={{ gap: "var(--heatmap-gap)" }}
+          >
+            {Array.from({ length: 7 }).map((_, dayIndex) => {
+              const cellIndex = weekIndex * 7 + dayIndex;
+              const entry = entries[cellIndex];
+
+              if (!entry) return null;
+
+              const level = intensityLevel(entry.count, maxCount);
+              const bg = level === 0 ? EMPTY_CELL : colorScale[level - 1];
+              const isHovered = hoveredIndex === cellIndex;
+              const animationDelay = isLoaded
+                ? weekIndex * 8 + dayIndex * 4
+                : 0;
+
+              return (
+                <motion.div
+                  key={`${weekIndex}-${dayIndex}`}
+                  className="relative aspect-square cursor-pointer rounded-sm transition-all duration-300 ease-out"
+                  style={{
+                    backgroundColor: bg,
+                    opacity: isLoaded ? 1 : 0,
+                    width: "var(--heatmap-cell)",
+                    height: "var(--heatmap-cell)",
+                  }}
+                  initial={isLoaded ? { scale: 0.6, opacity: 0 } : undefined}
+                  animate={isLoaded ? { scale: 1, opacity: 1 } : undefined}
+                  transition={{
+                    duration: 0.42,
+                    delay: animationDelay / 1000,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  onMouseEnter={() => setHoveredIndex(cellIndex)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  whileHover={{
+                    boxShadow: `0 0 16px ${accent}40, 0 0 6px ${accent}20`,
+                    y: -1,
+                  }}
+                />
+              );
+            })}
+          </div>
         ))}
-      </div>
-      <div className="mt-4 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.05em] text-[#cccccc]">
-        <span>Less</span>
-        <div className="flex gap-1">
-          {[0, 1, 2, 3, 4].map((level) => (
-            <span
-              key={level}
-              className="h-3 w-3 rounded-[3px] border border-white/[0.03]"
-              style={{ backgroundColor: heatColor(level, 4) }}
-            />
-          ))}
-        </div>
-        <span>More</span>
       </div>
     </div>
   );
 }
+
+/* ── data loaders (preserved) ──────────────────────────────────── */
 
 async function loadCodeforcesHeatmap() {
   const response = await fetch(
@@ -263,6 +348,8 @@ async function loadGitHubFallbackHeatmap() {
   return buildFallbackHeatmap("GitHub");
 }
 
+/* ── helpers (preserved) ───────────────────────────────────────── */
+
 function buildHeatmapFromCounts(counts: Map<string, number>) {
   return heatmapDates().map((date) => ({
     date,
@@ -291,9 +378,9 @@ function heatmapDates() {
   const dates: string[] = [];
   const today = new Date();
   const start = new Date(today);
-  start.setDate(today.getDate() - 7 * 24 + 1);
+  start.setDate(today.getDate() - 7 * 52 + 1);
 
-  for (let day = 0; day < 7 * 24; day += 1) {
+  for (let day = 0; day < 7 * 52; day += 1) {
     const date = new Date(start);
     date.setDate(start.getDate() + day);
     dates.push(toDateKey(date));
@@ -302,15 +389,27 @@ function heatmapDates() {
   return dates;
 }
 
+function toDateKey(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function intensityLevel(count: number, maxCount: number): number {
+  if (count <= 0) return 0;
+  const ratio = Math.min(1, count / maxCount);
+  if (ratio < 0.15) return 1;
+  if (ratio < 0.35) return 2;
+  if (ratio < 0.55) return 3;
+  if (ratio < 0.75) return 4;
+  return 5;
+}
+
 function monthLabels(entries: HeatmapEntry[]) {
   const formatter = new Intl.DateTimeFormat("en-US", { month: "short" });
   const labels: { month: string; column: number }[] = [];
   let previousMonth = "";
 
   entries.forEach((entry, index) => {
-    if (index % 7 !== 0) {
-      return;
-    }
+    if (index % 7 !== 0) return;
 
     const date = new Date(`${entry.date}T00:00:00`);
     const month = formatter.format(date);
@@ -322,26 +421,4 @@ function monthLabels(entries: HeatmapEntry[]) {
   });
 
   return labels;
-}
-
-function toDateKey(date: Date) {
-  return date.toISOString().slice(0, 10);
-}
-
-function heatColor(count: number, maxCount: number) {
-  if (count <= 0) {
-    return "#24222b";
-  }
-
-  const ratio = Math.min(1, count / maxCount);
-  if (ratio < 0.25) {
-    return "#4b3d58";
-  }
-  if (ratio < 0.5) {
-    return "#864b62";
-  }
-  if (ratio < 0.75) {
-    return "#bd5f5a";
-  }
-  return "#6f95c7";
 }

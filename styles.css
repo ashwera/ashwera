@@ -267,7 +267,7 @@ body.is-ready .preloader,
   pointer-events: none;
   z-index: 9998;
   mix-blend-mode: multiply;
-  will-change: left, top, transform;
+  will-change: transform, opacity;
   transition: opacity 0.35s ease;
 }
 
@@ -352,7 +352,7 @@ body.is-ready .preloader,
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 9999;
-  will-change: left, top, width, height;
+  will-change: transform, width, height;
   transition:
     width 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
     height 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),

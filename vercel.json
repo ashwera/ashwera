@@ -1,8 +1,8 @@
 {
   "redirects": [
     {
-      "source": "/resume",
-      "destination": "/resume/ashwerahasan.pdf",
+      "source": "/resume/",
+      "destination": "/resume",
       "permanent": false
     },
     {
@@ -11,5 +11,8 @@
       "permanent": false
     }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "rewrites": [
+    { "source": "/resume", "destination": "/resume/ashwerahasan.pdf" },
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }

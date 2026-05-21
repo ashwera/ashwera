@@ -20,7 +20,7 @@ const resumeExperience: ResumeExperience[] = [
     company: "K.J. Somaiya College of Engineering",
     dates: "Oct 2024 - Present",
     bullets: [
-      "Co-leading flagship events for 500+ freshmen to foster Competitive Programming and Open Source culture.",
+      "Co-leading flagship events for 500+ students to foster Competitive Programming and Open Source culture.",
       "Assisting in problem-setting and technical testing for ICPC-style contests using C++.",
     ],
   },
@@ -31,6 +31,15 @@ const resumeExperience: ResumeExperience[] = [
     bullets: [
       "Engineered automated content workflows by fine-tuning LLMs using brand-specific datasets to generate consistent, scalable, and on-brand copy.",
       "Developed and optimized prompt engineering frameworks to minimize model hallucination and ensure high-accuracy technical and marketing outputs.",
+    ],
+  },
+  {
+    role: "Technology Intern",
+    company: "Formial Labs",
+    dates: "May 2026 – Present",
+    bullets: [
+      "Built D2C storefront features, subscription flows, and custom integrations using Shopify, Razorpay, and REST APIs.",
+      "Implemented analytics and tracking infrastructure using GA4, GTM, and Meta Pixel for performance monitoring.",
     ],
   },
 ];
@@ -73,8 +82,7 @@ function buildLogo(company: string) {
 }
 
 function toProductImpact(bullets: string[]) {
-  const text = bullets.slice(0, 2).map(polishImpactStatement).join(" ");
-
+  const text = bullets.slice(0, 1).map(polishImpactStatement).join(" ");
   return text;
 }
 
@@ -84,7 +92,7 @@ function polishImpactStatement(bullet: string) {
     .replace(/^Assisting/i, "Supported")
     .replace(/^Engineered/i, "Built")
     .replace(/^Developed and optimized/i, "Designed")
-    .replace(/\.$/, ".")
+    .replace(/\.$/, "")
     .trim();
 }
 
@@ -119,24 +127,52 @@ export default function ExperienceSection() {
     [],
   );
 
+  const sectionRef = React.useRef<HTMLElement>(null);
+
   return (
     <section
-      className="w-full overflow-hidden px-4 py-14 text-black sm:px-6 sm:py-18 lg:px-8"
+      ref={sectionRef}
+      className="relative w-full overflow-hidden px-4 py-16 text-black sm:px-6 sm:py-20 lg:px-8"
     >
-      <div className="mx-auto w-full max-w-7xl">
-        <motion.h2
-          initial={{ opacity: 0, y: 18 }}
+      <div className="mx-auto w-full max-w-6xl">
+        {/* heading section - refined and minimal */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-18% 0px" }}
-          transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-8 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl"
+          viewport={{ once: true, margin: "-15% 0px" }}
+          transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-20 text-center"
         >
-          Experience
-        </motion.h2>
+          <h2 className="mt-1 font-['Bebas_Neue'] text-6xl sm:text-7xl lg:text-8xl font-normal uppercase leading-none text-black">
+            Experience
+          </h2>
+        </motion.div>
 
-        <div className="space-y-1.5">
+        {/* timeline container - desktop premium layout */}
+        <div className="hidden md:block relative">
+          {/* vertical timeline line - truly centered */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-black -translate-x-1/2" />
+
+          {/* timeline dots and content */}
+          <div className="space-y-16 relative">
+            {experiences.map((experience, index) => (
+              <TimelineItemDesktop
+                key={`${experience.role}-${experience.company}`}
+                experience={experience}
+                index={index}
+                isEven={index % 2 === 0}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* mobile timeline */}
+        <div className="md:hidden space-y-6 relative pl-6">
+          {/* vertical timeline line */}
+          <div className="absolute left-1.5 top-0 bottom-0 w-px bg-black" />
+
           {experiences.map((experience, index) => (
-            <ExperienceItem
+            <TimelineItemMobile
               key={`${experience.role}-${experience.company}`}
               experience={experience}
               index={index}
@@ -148,7 +184,111 @@ export default function ExperienceSection() {
   );
 }
 
-export function ExperienceItem({
+function TimelineItemDesktop({
+  experience,
+  index,
+  isEven,
+}: {
+  experience: ParsedExperience;
+  index: number;
+  isEven: boolean;
+}) {
+  const itemRef = React.useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  return (
+    <motion.div
+      ref={itemRef}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-8% 0px" }}
+      transition={{
+        duration: 0.56,
+        delay: index * 0.14,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className="relative grid grid-cols-[1fr_64px_1fr] gap-6 lg:gap-10 items-stretch"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* left content (dates if even, details if odd) */}
+      <div className="flex justify-end items-center">
+        {isEven ? (
+          <div className="text-right max-w-xs pr-6">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-black/50 mb-2">
+              Timeline
+            </p>
+            <p className="text-sm font-medium text-black/70">
+              {experience.dates}
+            </p>
+          </div>
+        ) : (
+          <div className="text-right max-w-xs pr-6">
+            <h3 className="text-lg sm:text-xl font-bold leading-tight text-black mb-1.5 tracking-tight">
+              {experience.role}
+            </h3>
+            <p className="text-sm font-semibold text-black/60 mb-3">
+              {experience.company}
+            </p>
+            <p className="text-sm leading-6 text-black/55">
+              {experience.impact}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* center node with motion */}
+      <div className="flex justify-center items-center relative">
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true, margin: "-8% 0px" }}
+          transition={{
+            delay: index * 0.14 + 0.28,
+            duration: 0.4,
+            ease: "easeOut",
+          }}
+          className="relative z-10"
+        >
+          {/* inner dot - solid black */}
+          <div className="w-4 h-4 rounded-full bg-black relative z-20 shadow-[0_2px_8px_rgba(0,0,0,0.12)]" />
+        </motion.div>
+      </div>
+
+      {/* right content (details if even, dates if odd) */}
+      <div className="flex justify-start items-center group">
+        {isEven ? (
+          <motion.div
+            className="max-w-xs pl-6 relative"
+            whileHover={{ x: 4 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            <h3 className="text-lg sm:text-xl font-bold leading-tight text-black mb-1.5 tracking-tight">
+              {experience.role}
+            </h3>
+            <p className="text-sm font-semibold text-black/60 mb-3">
+              {experience.company}
+            </p>
+            <p className="text-sm leading-6 text-black/55">
+              {experience.impact}
+            </p>
+          </motion.div>
+        ) : (
+          <div className="text-left max-w-xs pl-6">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-black/50 mb-2">
+              Timeline
+            </p>
+            <p className="text-sm font-medium text-black/70">
+              {experience.dates}
+            </p>
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+function TimelineItemMobile({
   experience,
   index,
 }: {
@@ -156,40 +296,33 @@ export function ExperienceItem({
   index: number;
 }) {
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 18 }}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-12% 0px" }}
+      viewport={{ once: true, margin: "-8% 0px" }}
       transition={{
-        duration: 0.36,
-        delay: index * 0.08,
+        duration: 0.48,
+        delay: index * 0.12,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="group grid gap-3 rounded-xl border border-transparent px-2 py-3 transition duration-300 ease-out hover:scale-[1.01] hover:border-black/[0.05] hover:bg-white/55 sm:grid-cols-[minmax(320px,0.62fr)_1fr] sm:gap-10 sm:px-3 sm:py-4 lg:grid-cols-[minmax(380px,0.55fr)_1fr] lg:gap-16"
+      className="relative pl-6"
     >
-      <div className="flex gap-3">
-        <div className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-black/12 via-white to-[#6f95c7]/24 p-px shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition duration-300 group-hover:shadow-[0_0_22px_rgba(111,149,199,0.22)]">
-          <div className="grid h-full w-full place-items-center rounded-xl bg-[#f7f7f5] text-xs font-bold text-black/75">
-            {experience.logo}
-          </div>
-        </div>
+      {/* timeline marker */}
+      <div className="absolute -left-3.5 top-1 w-3 h-3 rounded-full bg-black shadow-[0_2px_6px_rgba(0,0,0,0.12)]" />
 
-        <div>
-          <h3 className="text-[15px] font-bold leading-5 tracking-normal text-black sm:text-base">
-            {experience.role}
-          </h3>
-          <p className="mt-0.5 text-sm font-medium leading-5 text-black/45">
-            {experience.company}
-          </p>
-          <p className="text-sm font-medium leading-5 text-black/35">
-            {experience.dates}
-          </p>
-        </div>
+      {/* content card - premium subtle styling */}
+      <div className="rounded-lg border border-black/[0.04] bg-white/60 p-4 backdrop-blur-sm shadow-[0_1px_3px_rgba(0,0,0,0.02),0_4px_12px_rgba(0,0,0,0.04)]">
+        <p className="text-xs font-bold uppercase tracking-[0.12em] text-black/50 mb-2">
+          {experience.dates}
+        </p>
+        <h3 className="text-base font-bold text-black mb-1 leading-tight">
+          {experience.role}
+        </h3>
+        <p className="text-sm font-semibold text-black/60 mb-2.5">
+          {experience.company}
+        </p>
+        <p className="text-sm leading-5 text-black/55">{experience.impact}</p>
       </div>
-
-      <p className="text-[15px] leading-6 text-black/58 sm:pt-0.5">
-        {experience.impact}
-      </p>
-    </motion.article>
+    </motion.div>
   );
 }
