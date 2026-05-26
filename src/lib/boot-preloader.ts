@@ -127,22 +127,28 @@ export function createAdaptivePreloader(
   };
 
   const finishAndRemove = () => {
-    if (!root || removed) {
+    if (removed) {
       return;
     }
 
     removed = true;
-    root.remove();
+    root?.remove();
     unlockScroll();
     resolveRemoved?.();
   };
 
   const beginClose = () => {
-    if (!root || closing) {
+    if (closing) {
       return;
     }
 
     closing = true;
+
+    if (!root) {
+      finishAndRemove();
+      return;
+    }
+
     root.classList.add("is-closing");
     root.style.setProperty("--loader-progress", "1");
 

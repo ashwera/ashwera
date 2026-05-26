@@ -16,7 +16,23 @@
     />
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body>
+  <body class="is-loading">
+    <div
+      class="preloader"
+      id="preloader"
+      role="progressbar"
+      aria-label="Loading site"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+    >
+      <div class="preloader-inner">
+        <div class="preloader-line" aria-hidden="true">
+          <span></span>
+        </div>
+      </div>
+    </div>
+
     <div class="bg-texture" aria-hidden="true"></div>
 
     <header class="topbar">
