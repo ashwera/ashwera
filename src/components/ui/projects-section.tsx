@@ -61,6 +61,15 @@ const projects: Project[] = [
     image: SKYLINE_IMAGE,
     href: "#",
   },
+  {
+    id: "collabhub",
+    name: "CollabHub",
+    type: "Team Collaboration",
+    tagline: "A contribution-first talent network where builders showcase real work, collaborate on projects, and grow their reputation through impact instead of resumes.",
+    tech: ["MongoDB", "Express", "React", "Node.js"],
+    image: "/images/collabhub.png",
+    href: "https://collabhub-sigma.vercel.app/",
+  },
 ];
 
 const projectById = new Map(projects.map((project) => [project.id, project]));
@@ -142,6 +151,18 @@ const buildingRegions: BuildingRegion[] = [
       [0.954, 0.92],
     ],
     focus: [0.977, 0.36],
+  },
+  {
+    id: "hub-nexus",
+    projectId: "collabhub",
+    label: "CollabHub nexus tower",
+    points: [
+      [0.659, 0.15],
+      [0.725, 0.08],
+      [0.74, 0.92],
+      [0.65, 0.92],
+    ],
+    focus: [0.692, 0.35],
   },
 ];
 
