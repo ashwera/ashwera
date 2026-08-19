@@ -1,4 +1,6 @@
 import React from "react";
+import { projectDetailsData } from "@/lib/project-details";
+import { ProjectModal } from "@/components/ui/project-modal";
 
 type Project = {
   id: string;
@@ -8,6 +10,10 @@ type Project = {
   tech: string[];
   image: string;
   href: string;
+  description: string;
+  liveLink?: string;
+  githubLink?: string;
+  videoUrl?: string;
 };
 
 type NormalizedPoint = readonly [number, number];
@@ -23,54 +29,9 @@ type BuildingRegion = {
 const SKYLINE_IMAGE = "/images/skyline.svg";
 const SKYLINE_ASPECT_RATIO = "1632 / 248";
 
-const projects: Project[] = [
-  {
-    id: "mentora",
-    name: "Mentora",
-    type: "Learning Ops",
-    tagline:
-      "Student engagement tracking shaped into a clean instructor workflow.",
-    tech: ["Next.js", "PostgreSQL", "Tailwind"],
-    image: "/images/mentora.png",
-    href: "#",
-  },
-  {
-    id: "decay-ai",
-    name: "Decay-AI",
-    type: "Signal Engine",
-    tagline: "Trend decline signals for faster content strategy calls.",
-    tech: ["React", "Node.js", "MongoDB"],
-    image: "/images/decay-ai.png",
-    href: "#",
-  },
-  {
-    id: "civil-setu",
-    name: "Civil Setu",
-    type: "Civic Intelligence",
-    tagline: "AI-assisted civic reporting for cleaner issue routing.",
-    tech: ["TypeScript", "Redis", "AWS"],
-    image: "/images/civil-setu.png",
-    href: "#",
-  },
-  {
-    id: "city-pulse",
-    name: "City Pulse",
-    type: "Experience Map",
-    tagline: "A cinematic interaction layer for browsing work through space.",
-    tech: ["React", "SVG", "Motion"],
-    image: SKYLINE_IMAGE,
-    href: "#",
-  },
-  {
-    id: "collabhub",
-    name: "CollabHub",
-    type: "Team Collaboration",
-    tagline: "A contribution-first talent network where builders showcase real work, collaborate on projects, and grow their reputation through impact instead of resumes.",
-    tech: ["MongoDB", "Express", "React", "Node.js"],
-    image: "/images/collabhub.png",
-    href: "https://collabhub-sigma.vercel.app/",
-  },
-];
+const projects: Project[] = projectDetailsData.map((project) => ({
+  ...project,
+}));
 
 const projectById = new Map(projects.map((project) => [project.id, project]));
 
@@ -429,20 +390,17 @@ function SkylineExperienceMap() {
     ? projectById.get(hoveredRegion.projectId)
     : null;
 
-  const selectedRegion = React.useMemo(
-    () => buildingRegions.find((region) => region.id === selectedId) ?? null,
-    [selectedId],
-  );
-  const selectedProject = selectedRegion
-    ? projectById.get(selectedRegion.projectId)
-    : null;
+  const selectedProject = selectedId ? projectById.get(selectedId) ?? null : null;
 
   const updateHoveredId = React.useCallback((id: string | null) => {
     setHoveredId((current) => (current === id ? current : id));
   }, []);
 
   const openRegion = React.useCallback((region: BuildingRegion) => {
-    setSelectedId(region.id);
+    const project = projectById.get(region.projectId);
+    if (project) {
+      setSelectedId(project.id);
+    }
   }, []);
 
   // Track cursor position for preview positioning (non-React updates via engine)
@@ -605,14 +563,6 @@ function SkylineExperienceMap() {
         </div>
       </div>
 
-      {selectedRegion && selectedProject && (
-        <ExperienceDialog
-          project={selectedProject}
-          region={selectedRegion}
-          onClose={() => setSelectedId(null)}
-        />
-      )}
-
       <style>{`
         @keyframes skyline-firefly-pulse {
           0%, 100% {
@@ -668,6 +618,12 @@ function SkylineExperienceMap() {
           -webkit-backdrop-filter: none;
         }
       `}</style>
+      {selectedProject && (
+        <ProjectModal
+          project={selectedProject}
+          onClose={() => setSelectedId(null)}
+        />
+      )}
     </div>
   );
 }
@@ -735,71 +691,3 @@ const SkylineHotspot = React.memo(function SkylineHotspot({
     </g>
   );
 });
-
-function ExperienceDialog({
-  project,
-  region,
-  onClose,
-}: {
-  project: Project;
-  region: BuildingRegion;
-  onClose: () => void;
-}) {
-  return (
-    <div
-      className="fixed inset-0 z-[100] grid place-items-center bg-black/24 px-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="experience-dialog-title"
-      onClick={onClose}
-    >
-      <article
-        className="w-full max-w-md rounded-lg bg-white p-6 shadow-[0_24px_90px_rgba(0,0,0,0.22)]"
-        style={{
-          animation:
-            "experience-dialog-in 220ms cubic-bezier(0.22,1,0.36,1) both",
-        }}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-black/38">
-              {region.label}
-            </p>
-            <h3
-              id="experience-dialog-title"
-              className="mt-2 font-['Bebas_Neue'] text-5xl font-normal uppercase leading-none text-black"
-            >
-              {project.name}
-            </h3>
-          </div>
-          <button
-            type="button"
-            className="grid h-8 w-8 place-items-center rounded-full border border-black/10 text-lg leading-none text-black/60 transition-opacity hover:opacity-60"
-            aria-label="Close dialog"
-            onClick={onClose}
-          >
-            ×
-          </button>
-        </div>
-
-        <p className="mt-4 text-sm font-semibold leading-6 text-black/62">
-          Dialog content for this project can be designed next.
-        </p>
-      </article>
-
-      <style>{`
-        @keyframes experience-dialog-in {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 12px, 0) scale(0.97);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0) scale(1);
-          }
-        }
-      `}</style>
-    </div>
-  );
-}

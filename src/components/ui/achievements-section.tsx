@@ -40,13 +40,13 @@ const achievements: Achievement[] = [
   {
     title: "Competitive Programming",
     organization: "Codeforces • LeetCode • CSES",
-    highlight: "900+ Problems",
+    highlight: "1400+ Problems",
     description:
       "Solved algorithmic and data structure problems across multiple competitive programming platforms.",
     featured: false,
   },
   {
-    title: "SPIT Codebuster Contest",
+    title: "SPIT Codebuster Contest 2024",
     organization: "SPIT Mumbai",
     highlight: "4th Position",
     description:

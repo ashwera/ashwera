@@ -52,6 +52,7 @@ export default defineConfig(({ command }) => ({
       input: {
         main: path.resolve(__dirname, "index.html"),
         about: path.resolve(__dirname, "about/index.html"),
+        projectDetail: path.resolve(__dirname, "project-detail.html"),
       },
     },
   },

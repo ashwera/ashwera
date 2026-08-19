@@ -102,7 +102,7 @@ export default function FooterSection() {
         </a>
       </div>
 
-      <span className="footer-copy">Ashwera Hasan {year}</span>
+      <span className="footer-copy">Ashwera Hasan</span>
     </div>
   );
 }

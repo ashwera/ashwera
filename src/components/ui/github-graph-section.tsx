@@ -64,6 +64,8 @@ const panels: HeatmapPanel[] = [
 
 export default function GithubGraphSection() {
   const sectionRef = React.useRef<HTMLElement>(null);
+  const [isSimpleView, setIsSimpleView] = React.useState(false);
+  const [selectedPanelIdx, setSelectedPanelIdx] = React.useState(1); // Default to GitHub
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end end"],
@@ -80,44 +82,154 @@ export default function GithubGraphSection() {
   const leetcodeScale = useTransform(scrollYProgress, [0, 0.46], [1, 0.965]);
   const githubScale = useTransform(scrollYProgress, [0.18, 0.82], [1, 0.975]);
 
+  if (isSimpleView) {
+    return (
+      <section className="relative w-full px-4 sm:px-6 lg:px-8">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-br from-black/[0.04] via-white to-white" />
+          <div className="absolute left-1/2 top-24 h-80 w-80 -translate-x-1/2 rounded-full bg-black/[0.04] blur-[120px]" />
+        </div>
+        <div className="mx-auto w-full max-w-[1600px] py-6 sm:py-8 lg:flex lg:h-screen lg:min-h-screen lg:flex-col">
+          {/* Header with toggle */}
+          <div className="mb-0 flex items-end justify-between gap-2">
+            <div>
+              <h2 className="mt-0 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl lg:text-8xl">
+                Heatmaps
+              </h2>
+              <p className="-mt-1 text-xs font-semibold uppercase tracking-[0.28em] text-black/70">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </p>
+            </div>
+            <button
+              onClick={() => setIsSimpleView(false)}
+              className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-black/70 transition-all hover:bg-black hover:text-white whitespace-nowrap"
+            >
+              <span>Scroll View</span>
+            </button>
+          </div>
+
+          {/* Stacked card layout (desktop) + simple single view (mobile) */}
+          <div className="w-full lg:flex lg:flex-1 lg:min-h-0 lg:flex-col">
+            {/* Small-screen / default: stacked compact heatmaps (mobile) */}
+            <div className="block lg:hidden">
+              <div className="flex flex-col gap-4">
+                {panels.map((panel) => (
+                  <div key={panel.platform} className="w-full">
+                    <HeatmapCard panel={panel} compact layout="static" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop: stacked cards with side tabs (file-folder / thumb-index pattern) */}
+            <div className="hidden lg:flex lg:flex-1 lg:min-h-0 lg:mt-4 lg:pr-16">
+              <div className="relative flex-1 min-h-0">
+                {panels.map((panel, idx) => {
+                  const isActive = selectedPanelIdx === idx;
+                  const rank =
+                    panels
+                      .map((_, i) => i)
+                      .filter((i) => i !== selectedPanelIdx)
+                      .indexOf(idx) + 1;
+                  const offset = isActive ? 0 : rank * 10;
+                  const zIndex = isActive ? 40 : 30 - rank * 10;
+
+                  return (
+                    <div
+                      key={panel.platform}
+                      className="absolute inset-0 flex flex-col transition-all duration-300 ease-in-out"
+                      style={{
+                        transform: `translate(${offset}px, ${offset}px)`,
+                        zIndex,
+                      }}
+                    >
+                      {/* Tab poking out from the right edge, like a thumb index */}
+                      <button
+                        onClick={() => setSelectedPanelIdx(idx)}
+                        className={`absolute -right-16 z-50 inline-flex h-10 items-center rounded-r-lg border border-black/10 bg-white px-3 text-xs font-semibold uppercase tracking-[0.12em] transition-colors ${
+                          isActive
+                            ? "text-black"
+                            : "text-black/40 hover:text-black/70"
+                        }`}
+                        style={{ top: 8 + idx * 52 }}
+                      >
+                        {panel.platform}
+                      </button>
+
+                      {/* Card (fills stack area) */}
+                      <HeatmapCard panel={panel} layout="static" fill />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       ref={sectionRef}
-      className="relative h-[300vh] w-full px-4 sm:px-6 lg:px-8"
+      className="relative w-full px-4 sm:px-6 lg:h-[300vh] lg:px-8"
     >
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-black/[0.04] via-white to-white" />
         <div className="absolute left-1/2 top-24 h-80 w-80 -translate-x-1/2 rounded-full bg-black/[0.04] blur-[120px]" />
       </div>
-      <div className="sticky top-0 flex min-h-screen items-center overflow-visible py-12">
+      <div className="flex items-center overflow-visible py-6 lg:sticky lg:top-0 lg:min-h-screen">
         <div className="w-full max-w-none">
           {/* ── section header ── */}
-          <div className="mb-1">
-            <h2 className="mt-1 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl lg:text-8xl">
-              Heatmaps
-            </h2>
+          <div className="mb-0 flex items-end justify-between gap-2">
+            <div>
+              <h2 className="mt-0 font-['Bebas_Neue'] text-6xl font-normal uppercase leading-none text-black sm:text-7xl lg:text-8xl">
+                Heatmaps
+              </h2>
+              <p className="-mt-1 text-xs font-semibold uppercase tracking-[0.28em] text-black/70">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              </p>
+            </div>
+            <button
+              onClick={() => setIsSimpleView(true)}
+              className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-black/70 transition-all hover:bg-black hover:text-white whitespace-nowrap"
+            >
+              <span>Simple View</span>
+            </button>
           </div>
 
           {/* ── stacked heatmap cards ── */}
-          <div className="relative h-[360px] w-full sm:h-[440px]">
-            <motion.div
-              className="absolute inset-0 z-10"
-              style={{ scale: leetcodeScale }}
-            >
-              <HeatmapCard panel={panels[0]} />
-            </motion.div>
-            <motion.div
-              className="absolute inset-0 z-20"
-              style={{ x: githubX, rotate: githubRotate, scale: githubScale }}
-            >
-              <HeatmapCard panel={panels[1]} />
-            </motion.div>
-            <motion.div
-              className="absolute inset-0 z-30"
-              style={{ x: codeforcesX, rotate: codeforcesRotate }}
-            >
-              <HeatmapCard panel={panels[2]} />
-            </motion.div>
+          <div className="w-full">
+            {/* Mobile: stacked compact heatmaps */}
+            <div className="block lg:hidden flex flex-col gap-4">
+              {panels.map((panel) => (
+                <div key={panel.platform} className="w-full">
+                  <HeatmapCard panel={panel} compact layout="static" />
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: animated stacked cards (existing behavior) */}
+            <div className="hidden lg:relative lg:block lg:h-[360px] lg:w-full lg:sm:h-[440px]">
+              <motion.div
+                className="absolute inset-0 z-10"
+                style={{ scale: leetcodeScale }}
+              >
+                <HeatmapCard panel={panels[0]} />
+              </motion.div>
+              <motion.div
+                className="absolute inset-0 z-20"
+                style={{ x: githubX, rotate: githubRotate, scale: githubScale }}
+              >
+                <HeatmapCard panel={panels[1]} />
+              </motion.div>
+              <motion.div
+                className="absolute inset-0 z-30"
+                style={{ x: codeforcesX, rotate: codeforcesRotate }}
+              >
+                <HeatmapCard panel={panels[2]} />
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
@@ -127,7 +239,17 @@ export default function GithubGraphSection() {
 
 /* ── heatmap card ──────────────────────────────────────────────── */
 
-function HeatmapCard({ panel }: { panel: HeatmapPanel }) {
+function HeatmapCard({
+  panel,
+  compact = false,
+  layout = "absolute",
+  fill = false,
+}: {
+  panel: HeatmapPanel;
+  compact?: boolean;
+  layout?: "absolute" | "static";
+  fill?: boolean;
+}) {
   const [entries, setEntries] = React.useState<HeatmapEntry[]>(() =>
     buildFallbackHeatmap(panel.platform),
   );
@@ -162,20 +284,31 @@ function HeatmapCard({ panel }: { panel: HeatmapPanel }) {
     return () => clearTimeout(timer);
   }, []);
 
+  const styleVars: React.CSSProperties = {
+    // Default (desktop) proportions
+    "--heatmap-cell": compact
+      ? "clamp(8px, 2.8vw, 12px)"
+      : "clamp(11px, 1.75vw, 15px)",
+    "--heatmap-gap": compact ? "clamp(2px, 1.2vw, 4px)" : "clamp(3px, 0.75vw, 6px)",
+  } as React.CSSProperties;
+
   return (
     <div
-      className="absolute inset-0 flex items-start justify-center pt-2 sm:pt-3"
-      style={
-        {
-          // GitHub-like proportions: ~12px cells, ~4px gaps at ~844px width
-          // Clamp keeps the grid responsive without over-scaling on wide screens.
-          "--heatmap-cell": "clamp(11px, 1.75vw, 15px)",
-          "--heatmap-gap": "clamp(3px, 0.75vw, 6px)",
-        } as React.CSSProperties
+      className={
+        layout === "absolute"
+          ? "absolute inset-0 flex items-start justify-center pt-0 sm:pt-0"
+          : fill
+            ? "relative min-h-0 w-full flex flex-1 flex-col items-center justify-center"
+            : "relative w-full flex items-start justify-center pt-0 sm:pt-0"
       }
+      style={styleVars}
     >
-      <div className="w-full max-w-[940px] rounded-2xl bg-[#fdfdfd] px-4 py-4 shadow-none border border-black/[0.06] sm:px-6 sm:py-5 isolate">
-        <div className="mb-3 flex items-center justify-center">
+      <div
+        className={`w-full max-w-[940px] rounded-2xl bg-[#fdfdfd] px-4 py-0 shadow-none border border-black/[0.06] sm:px-6 sm:py-0 isolate ${
+          fill ? "h-full flex flex-col justify-center" : ""
+        }`}
+      >
+        <div className="mb-0 flex items-center justify-center">
           <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-black/50">
             {panel.platform}
           </p>
@@ -187,7 +320,8 @@ function HeatmapCard({ panel }: { panel: HeatmapPanel }) {
           isLoaded={isLoaded}
           accent={panel.accent}
         />
-        <p className="mt-3 text-right text-[11px] font-medium uppercase tracking-[0.18em] text-black/40">
+        {/* Legend removed per request */}
+        <p className="mt-1 text-right text-[11px] font-medium uppercase tracking-[0.18em] text-black/40">
           {totalCount.toLocaleString("en-US")} submissions this year
         </p>
       </div>
@@ -217,7 +351,7 @@ function HeatmapGrid({
   return (
     <div className="mx-auto w-full max-w-[940px]">
       <div
-        className="mb-2 grid"
+        className="mb-0 grid"
         style={{
           gridTemplateColumns: "repeat(52, minmax(0, var(--heatmap-cell)))",
           columnGap: "var(--heatmap-gap)",
