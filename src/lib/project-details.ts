@@ -38,7 +38,7 @@ export const projectDetailsData: ProjectDetail[] = [
     description:
       "Decay-AI is an intelligent signal engine that detects trend decline patterns early, enabling content strategists to pivot strategies before it's too late. By analyzing content performance across multiple dimensions, it provides actionable insights that help teams stay ahead of the curve.",
     liveLink: "https://decay-ai-nsay.onrender.com/",
-    githubLink: "#",
+    githubLink: "#",  
   },
   {
     id: "civil-setu",
