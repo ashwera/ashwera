@@ -38,8 +38,8 @@ const projectById = new Map(projects.map((project) => [project.id, project]));
 const buildingRegions: BuildingRegion[] = [
   {
     id: "west-towers",
-    projectId: "mentora",
-    label: "Mentora building cluster",
+    projectId: "safeeyah",
+    label: "Safeeyah building cluster",
     points: [
       [0.176, 0.03],
       [0.205, 0.18],
@@ -62,24 +62,9 @@ const buildingRegions: BuildingRegion[] = [
     focus: [0.35, 0.28],
   },
   {
-    id: "central-dome",
-    projectId: "city-pulse",
-    label: "City Pulse central district",
-    points: [
-      [0.414, 0.57],
-      [0.455, 0.57],
-      [0.47, 0.37],
-      [0.489, 0.56],
-      [0.518, 0.58],
-      [0.518, 0.92],
-      [0.414, 0.92],
-    ],
-    focus: [0.466, 0.56],
-  },
-  {
     id: "east-stack",
-    projectId: "civil-setu",
-    label: "Civil Setu tower stack",
+    projectId: "sandhaan",
+    label: "Sandhaan tower stack",
     points: [
       [0.552, 0.28],
       [0.625, 0.3],
@@ -88,30 +73,6 @@ const buildingRegions: BuildingRegion[] = [
       [0.544, 0.41],
     ],
     focus: [0.588, 0.44],
-  },
-  {
-    id: "needle-row",
-    projectId: "decay-ai",
-    label: "Decay-AI needle row",
-    points: [
-      [0.779, 0.13],
-      [0.809, 0.26],
-      [0.809, 0.92],
-      [0.777, 0.92],
-    ],
-    focus: [0.793, 0.36],
-  },
-  {
-    id: "final-tower",
-    projectId: "civil-setu",
-    label: "Civil Setu eastern tower",
-    points: [
-      [0.955, 0.04],
-      [0.998, 0.2],
-      [0.998, 0.92],
-      [0.954, 0.92],
-    ],
-    focus: [0.977, 0.36],
   },
   {
     id: "hub-nexus",

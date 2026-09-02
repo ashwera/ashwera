@@ -14,17 +14,16 @@ export type ProjectDetail = {
 
 export const projectDetailsData: ProjectDetail[] = [
   {
-    id: "mentora",
-    name: "Mentora",
-    type: "Learning Ops",
-    tagline:
-      "Student engagement tracking shaped into a clean instructor workflow.",
-    tech: ["Next.js", "PostgreSQL", "Tailwind"],
-    image: "/images/mentora.png",
-    href: "#",
+    id: "safeeyah",
+    name: "Safeeyah",
+    type: "Quranic Q&A",
+    tagline: "A calm, Quran-grounded space for thoughtful questions.",
+    tech: ["Node.js", "Express", "Gemini", "Pinecone"],
+    image: "/images/skyline.svg",
+    href: "https://safeeyah.onrender.com/",
     description:
-      "Mentora is a comprehensive learning operations platform that transforms how instructors track and engage with their students. Built with a focus on clean, intuitive workflows, it provides real-time visibility into student engagement metrics and enables instructors to make data-driven decisions to improve learning outcomes.",
-    liveLink: "#",
+      "Safeeyah is a Quran-grounded question-and-answer application that retrieves relevant passages and uses AI to provide thoughtful, context-aware responses.",
+    liveLink: "https://safeeyah.onrender.com/",
     githubLink: "#",
   },
   {
@@ -41,29 +40,16 @@ export const projectDetailsData: ProjectDetail[] = [
     githubLink: "#",  
   },
   {
-    id: "civil-setu",
-    name: "Civil Setu",
-    type: "Civic Intelligence",
-    tagline: "AI-assisted civic reporting for cleaner issue routing.",
-    tech: ["TypeScript", "Redis", "AWS"],
-    image: "/images/civil-setu.png",
-    href: "#",
-    description:
-      "Civil Setu bridges the gap between citizens and civic authorities through intelligent issue reporting and routing. Using AI-powered categorization and prioritization, it ensures civic problems reach the right department faster, resulting in quicker resolutions and a cleaner city.",
-    liveLink: "#",
-    githubLink: "#",
-  },
-  {
-    id: "city-pulse",
-    name: "City Pulse",
-    type: "Experience Map",
-    tagline: "A cinematic interaction layer for browsing work through space.",
-    tech: ["React", "SVG", "Motion"],
+    id: "sandhaan",
+    name: "Sandhaan",
+    type: "Web Experience",
+    tagline: "A focused digital experience built for clear interaction.",
+    tech: ["React", "TypeScript", "Tailwind"],
     image: "/images/skyline.svg",
-    href: "#",
+    href: "https://sandhaan.vercel.app/",
     description:
-      "City Pulse creates an immersive, cinematic experience for exploring projects through an interactive spatial interface. By visualizing projects as a dynamic cityscape, users can browse and discover work in a completely new way—one that feels intuitive, engaging, and truly innovative.",
-    liveLink: "#",
+      "Sandhaan is a polished web experience designed around focused content, intuitive navigation, and a responsive interface.",
+    liveLink: "https://sandhaan.vercel.app/",
     githubLink: "#",
   },
   {
