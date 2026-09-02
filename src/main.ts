@@ -9,7 +9,6 @@ import FooterSection from "@/components/ui/footer-section";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { createAdaptivePreloader } from "@/lib/boot-preloader";
-import { setupSmoothScroll } from "@/lib/smooth-scroll";
 import "./tailwind.css";
 
 const formatTime = (): string => {
@@ -363,20 +362,6 @@ const bootstrap = async (): Promise<void> => {
   initializeLiveTime();
   initializeHeroInteractions();
   loader.completeTask("init");
-
-  const shouldEnableLenis = false;
-
-  await loader.trackPromise(
-    "smooth-scroll",
-    setupSmoothScroll(shouldEnableLenis).catch(() => ({
-      destroy: () => undefined,
-    })),
-    {
-      kind: "smooth-scroll",
-      weight: 1,
-      estimateMs: 420,
-    },
-  );
 
   await loader.trackPromise("fonts", waitForFontsReady(), {
     kind: "fonts",
